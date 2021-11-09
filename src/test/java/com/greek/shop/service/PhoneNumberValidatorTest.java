@@ -19,29 +19,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class PhoneNumberValidatorTest {
-    private static AuthController.TelAndCode VALID_PARAMETER = new AuthController.TelAndCode("13134070272", null);
-    private static AuthController.TelAndCode INVALID_PARAMETER = new AuthController.TelAndCode("1313407027", null);
-    private static AuthController.TelAndCode NULL_PARAMETER = new AuthController.TelAndCode(null, null);
+    public static AuthController.TelAndCode VALID_PARAMETER = new AuthController.TelAndCode("13134070272", null);
+    public static AuthController.TelAndCode INVALID_PARAMETER = new AuthController.TelAndCode("1313407027", null);
+    public static AuthController.TelAndCode NULL_PARAMETER = new AuthController.TelAndCode(null, null);
 
     @Autowired
     private MockMvc mvc;
     private ObjectMapper objectMapper = new ObjectMapper();
-
-    @Test
-    public void returnTrueIfValid() throws Exception {
-        mvc.perform(post("/api/code")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(VALID_PARAMETER)))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void returnFalseIfInValid() throws Exception {
-        mvc.perform(post("/api/code")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(INVALID_PARAMETER)))
-                .andExpect(status().isBadRequest());
-    }
 
     @Test
     public void TelIsNull() throws Exception {

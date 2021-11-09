@@ -190,17 +190,17 @@
                                     </limits>
                                 </rule>
                             </rules>
-                            <excludes>
-                                <exclude>com/greek/shop/entity/*</exclude>
-                                <exclude>com/greek/shop/dao/*</exclude>
-                            </excludes>
                         </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>com/greek/shop/entity/*</exclude>
+                        <exclude>com/greek/shop/dao/*</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
-
         </plugins>
-
     </build>
 
 </project>
