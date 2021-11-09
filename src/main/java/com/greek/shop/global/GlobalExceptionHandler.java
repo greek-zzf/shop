@@ -1,5 +1,6 @@
 package com.greek.shop.global;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,10 +16,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void paramIsInvalid(MethodArgumentNotValidException ex) {
-        String errorMsg = ex.getBindingResult().getFieldError().getDefaultMessage();
+        ex.getBindingResult().getFieldError().getDefaultMessage();
     }
 
 }
