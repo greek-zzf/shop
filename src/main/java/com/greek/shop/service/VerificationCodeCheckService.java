@@ -19,4 +19,8 @@ public class VerificationCodeCheckService {
     public void addCode(String tel, String code) {
         telToCode.put(tel, code);
     }
+
+    public String getCorrectCode(String tel) {
+        return telToCode.get(tel);
+    }
 }

@@ -2,6 +2,7 @@ package com.greek.shop.config;
 
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -32,9 +33,9 @@ public class ShiroConfig {
     }
 
     @Bean
-    public SecurityManager securityManager() {
+    public SecurityManager securityManager(AuthorizingRealm realm) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        // securityManager.setRealm();
+        securityManager.setRealm(realm);
         securityManager.setCacheManager(new MemoryConstrainedCacheManager());
         securityManager.setSessionManager(new DefaultSessionManager());
         return securityManager;

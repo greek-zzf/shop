@@ -5,5 +5,7 @@ spring:
     password: root
     url: jdbc:mysql://192.168.20.112/wxshop?useSSL=false&allowPublicKeyRetrieval=true
 
-shiro:
-  loginUrl: /api/login
+mybatis:
+  mapper-locations:
+    - classpath:db/mybatis/*.xml
+
