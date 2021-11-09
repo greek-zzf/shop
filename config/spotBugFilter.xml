@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <Match>
+        <Class name="~.*\.entity\..*"/>
+    </Match>
+    <Match>
+        <Class name="~.*\.dao\..*"/>
+    </Match>
+    <Match>
+        <Class name="~.*\.service\..*"/>
+        <Bug code="EI2"></Bug>
+    </Match>
+</FindBugsFilter>

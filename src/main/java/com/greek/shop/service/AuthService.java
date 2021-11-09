@@ -1,6 +1,5 @@
 package com.greek.shop.service;
 
-import com.greek.shop.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +23,7 @@ public class AuthService {
     }
 
     public void sendVerificationCode(String tel) {
-        User user = userService.createUserIfNotExist(tel);
+        userService.createUserIfNotExist(tel);
         String correctCode = smsCodeService.sendSmsCode(tel);
         verificationCodeCheckService.addCode(tel, correctCode);
     }
