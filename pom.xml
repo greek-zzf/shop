@@ -112,7 +112,7 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>3.1.2</version>
                 <configuration>
-                    <configLocation>${basedir}/config/checkstyle.xml</configLocation>
+                    <configLocation>${basedir}/config/checkStyle.xml</configLocation>
                     <includeTestSourceDirectory>false</includeTestSourceDirectory>
                     <enableRulesSummary>false</enableRulesSummary>
                     <excludes>com/greek/shop/dao/*,com/greek/shop/entity/*</excludes>
