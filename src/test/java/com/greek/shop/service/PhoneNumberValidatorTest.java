@@ -22,6 +22,7 @@ public class PhoneNumberValidatorTest {
     public static AuthController.TelAndCode VALID_PARAMETER = new AuthController.TelAndCode("13134070272", null);
     public static AuthController.TelAndCode INVALID_PARAMETER = new AuthController.TelAndCode("1313407027", null);
     public static AuthController.TelAndCode NULL_PARAMETER = new AuthController.TelAndCode(null, null);
+    public static AuthController.TelAndCode VALID_PARAMETER_CODE = new AuthController.TelAndCode("13134070272", "123456");
 
     @Autowired
     private MockMvc mvc;

@@ -1,6 +1,8 @@
 package com.greek.shop.controller;
 
+import com.greek.shop.entity.LoginResponse;
 import com.greek.shop.service.AuthService;
+import com.greek.shop.service.UserContext;
 import com.greek.shop.validator.annotaion.Phone;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.Optional;
 
 /**
  * @author Zhaofeng Zhou
@@ -40,9 +43,17 @@ public class AuthController {
         SecurityUtils.getSubject().login(token);
     }
 
+
     @GetMapping("/status")
-    public void loginStatus() {
-        System.out.println(SecurityUtils.getSubject().getPrincipal());
+    public Object loginStatus() {
+        return Optional.ofNullable(UserContext.getCurrentUser())
+                .map(LoginResponse::login)
+                .orElse(LoginResponse.notLogin());
+    }
+
+    @PostMapping("/logout")
+    public void logout() {
+        SecurityUtils.getSubject().logout();
     }
 
     public static class TelAndCode {
