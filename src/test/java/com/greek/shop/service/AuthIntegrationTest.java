@@ -76,6 +76,11 @@ public class AuthIntegrationTest {
         Assertions.assertFalse(content.isLogin());
     }
 
+    @Test
+    public void returnUnauthorizedNotLogin() throws Exception {
+        postRequest("/api/any", null, "", status().isUnauthorized());
+    }
+
 
     private MvcResult getRequest(String url, Cookie cookie, ResultMatcher resultMatcher) throws Exception {
         if (cookie == null) {

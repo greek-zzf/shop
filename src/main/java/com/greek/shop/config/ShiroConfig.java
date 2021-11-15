@@ -1,5 +1,6 @@
 package com.greek.shop.config;
 
+import com.greek.shop.interceptor.ShiroLoginFilter;
 import com.greek.shop.interceptor.UserLoginInterceptor;
 import com.greek.shop.service.UserService;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
@@ -14,7 +15,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.servlet.Filter;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -40,7 +43,14 @@ public class ShiroConfig implements WebMvcConfigurer {
         Map<String, String> patten = new HashMap<>();
         patten.put("/api/code", "anon");
         patten.put("/api/login", "anon");
+        patten.put("/api/status", "anon");
+        patten.put("/api/logout", "anon");
+        patten.put("/**", "shiroLoginFilter");
 
+        Map<String, Filter> filterMap = new LinkedHashMap<>();
+        filterMap.put("shiroLoginFilter", new ShiroLoginFilter());
+
+        shiroFilterFactoryBean.setFilters(filterMap);
         shiroFilterFactoryBean.setFilterChainDefinitionMap(patten);
         return shiroFilterFactoryBean;
     }
