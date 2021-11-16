@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Date;
 
 /**
@@ -40,5 +41,10 @@ public class GoodsController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Goods deleteGoods(@PathVariable("id") Long goodsId) {
         return goodsService.deleteGoodsById(goodsId);
+    }
+
+    @PatchMapping("/goods/{id}")
+    public Goods updateGoods(@RequestBody @Valid Goods goods) {
+        return goodsService.updateGoods(goods);
     }
 }

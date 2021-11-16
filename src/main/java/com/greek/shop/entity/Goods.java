@@ -1,5 +1,6 @@
 package com.greek.shop.entity;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 public class Goods {
@@ -10,6 +11,7 @@ public class Goods {
      *
      * @mbg.generated Mon Nov 15 14:36:24 GMT+08:00 2021
      */
+    @NotBlank
     private Long id;
 
     /**

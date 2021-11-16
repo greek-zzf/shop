@@ -5,11 +5,11 @@ import com.greek.shop.dao.ShopMapper;
 import com.greek.shop.entity.Goods;
 import com.greek.shop.entity.Shop;
 import com.greek.shop.enums.StatusEnum;
-import com.greek.shop.exception.NotAuthorizedException;
-import com.greek.shop.exception.ResourceNotFoundException;
+import com.greek.shop.exception.HttpException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -35,17 +35,54 @@ public class GoodsService {
             goods.setId(id);
             return goods;
         }
-        throw new NotAuthorizedException("无权访问");
+        throw HttpException.forbidden("无权访问");
     }
 
 
     public Goods deleteGoodsById(Long goodsId) {
         Goods goods = goodsMapper.selectByPrimaryKey(goodsId);
-        if (goods == null) {
-            throw new ResourceNotFoundException("商品未找到！");
+        checkGoodsExist(goods);
+
+        // Optional.ofNullable(goods.getShopId())
+        //         .map(shopMapper::selectByPrimaryKey)
+        //         .orElseThrow()
+        if (Objects.equals(goods.getShopId(), UserContext.getCurrentUser().getId())) {
+            goods.setStatus(StatusEnum.DELETE.toString());
+            goodsMapper.updateByPrimaryKey(goods);
+            return goods;
         }
-        goods.setStatus(StatusEnum.DELETE.toString());
-        goodsMapper.updateByPrimaryKey(goods);
-        return goods;
+        throw HttpException.forbidden("无权访问！");
+    }
+
+    public Goods updateGoods(Goods goods) {
+        Goods goodsInDatabase = goodsMapper.selectByPrimaryKey(goods.getId());
+        checkGoodsExist(goodsInDatabase);
+
+
+        if (Objects.equals(goods.getShopId(), UserContext.getCurrentUser().getId())) {
+            goods.setUpdatedAt(new Date());
+            goodsMapper.updateByPrimaryKey(goods);
+            return goods;
+        }
+        throw HttpException.forbidden("无权访问！");
+    }
+
+    private void checkGoodsExist(Goods goods) {
+        if (goods == null) {
+            throw HttpException.notFound("商品未找到！");
+        }
+    }
+
+    private void checkOperationIsLegal(Goods goods) {
+
+        // Optional.ofNullable(goods.getShopId())
+        //         .map(shopMapper::selectByPrimaryKey)
+        //         .filter(shop -> Objects.equals(shop.getOwnerUserId(), UserContext.getCurrentUser().getId()))
+        //         .orElseThrow(shop -> HttpException.notFound("商品未找到！"));
+        //
+
+        if (Objects.equals(goods.getShopId(), UserContext.getCurrentUser().getId())) {
+            throw HttpException.notFound("商品未找到！");
+        }
     }
 }
