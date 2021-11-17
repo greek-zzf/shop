@@ -78,21 +78,20 @@ public class GoodsService {
 
     public Page<Goods> getGoodsPage(int pageNum, int pageSize, Long shopId) {
         int totalNumber = countGoods(shopId);
+        // Page<Goods> goodsPage = Page.of();
         return null;
     }
 
     private int countGoods(Long shopId) {
 
+        GoodsExample example = new GoodsExample();
         if (shopId == null) {
-            GoodsExample example = new GoodsExample();
             example.createCriteria().andStatusEqualTo(StatusEnum.OK.getName());
-            return (int) goodsMapper.countByExample(example);
         } else {
-            GoodsExample example = new GoodsExample();
             example.createCriteria()
                     .andStatusEqualTo(StatusEnum.OK.getName())
                     .andShopIdEqualTo(shopId);
-            return (int) goodsMapper.countByExample(example);
         }
+        return (int) goodsMapper.countByExample(example);
     }
 }

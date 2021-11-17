@@ -14,6 +14,13 @@ public class Page<T> {
     int totalPage;
     List<T> data;
 
+    public Page() {
+    }
+
+    public static <T> Page<T> of(int pageNum, int pageSize) {
+        return null;
+    }
+
 
     public int getPageNum() {
         return pageNum;

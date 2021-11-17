@@ -3,8 +3,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: root
-    url: jdbc:mysql://192.168.20.112/wxshop?useSSL=false&allowPublicKeyRetrieval=true
+    password: 123456
+    url: jdbc:mysql://127.0.0.1/wxshop?useSSL=false&allowPublicKeyRetrieval=true
 
 mybatis:
   mapper-locations:
