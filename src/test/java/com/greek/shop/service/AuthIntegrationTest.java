@@ -34,20 +34,11 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void loginLogoutTest() throws Exception {
-
-        // 访问 /api/status 处于未登录状态
-        MvcResult result = getRequest("/api/status", null, status().isOk());
-        LoginResponse content = objectMapper.readValue(result.getResponse().getContentAsString(), LoginResponse.class);
-        Assertions.assertFalse(content.isLogin());
-
-        // 访问 /api/login 获取验证码，然后登录，判断是否登录成功
-        postRequest("/api/code", null, VALID_PARAMETER, status().isOk());
-        result = postRequest("/api/login", null,VALID_PARAMETER_CODE, status().isOk());
-        Cookie sessionCookie = result.getResponse().getCookie("JSESSIONID");
+        Cookie sessionCookie = loginAndReturnCookie();
 
         // 访问 /api/status 获取登录的用户信息
-        result = getRequest("/api/status", sessionCookie, status().isOk());
-        content = objectMapper.readValue(result.getResponse().getContentAsString(), LoginResponse.class);
+        MvcResult result = getRequest("/api/status", sessionCookie, status().isOk());
+        LoginResponse content = objectMapper.readValue(result.getResponse().getContentAsString(), LoginResponse.class);
         Assertions.assertTrue(content.isLogin());
         Assertions.assertEquals(VALID_PARAMETER.getTel(), content.getUser().getTel());
 

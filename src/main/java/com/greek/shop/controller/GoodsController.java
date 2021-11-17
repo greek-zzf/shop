@@ -1,6 +1,7 @@
 package com.greek.shop.controller;
 
 import com.greek.shop.entity.Goods;
+import com.greek.shop.entity.Page;
 import com.greek.shop.service.GoodsService;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,14 @@ public class GoodsController {
     public GoodsController(GoodsService goodsService) {
         this.goodsService = goodsService;
     }
+
+    @GetMapping("/goods")
+    public Page<Goods> getGoods(@RequestParam("pageNum") int pageNum,
+                                @RequestParam("pageSize") int pageSize,
+                                @RequestParam(value = "shopId", required = false) Long shopId) {
+        return goodsService.getGoodsPage(pageNum, pageSize, shopId);
+    }
+
 
     @PostMapping("/goods")
     @ResponseStatus(HttpStatus.CREATED)

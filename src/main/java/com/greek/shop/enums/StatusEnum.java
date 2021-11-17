@@ -8,5 +8,9 @@ package com.greek.shop.enums;
  */
 public enum StatusEnum {
     DELETE,
-    OK
+    OK;
+
+    public String getName() {
+        return name().toLowerCase();
+    }
 }

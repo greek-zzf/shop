@@ -1,8 +1,10 @@
 package com.greek.shop.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.greek.shop.entity.LoginResponse;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.configuration.ClassicConfiguration;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,8 +18,11 @@ import org.springframework.test.web.servlet.ResultMatcher;
 
 import javax.servlet.http.Cookie;
 
+import static com.greek.shop.service.PhoneNumberValidatorTest.VALID_PARAMETER;
+import static com.greek.shop.service.PhoneNumberValidatorTest.VALID_PARAMETER_CODE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author Zhaofeng Zhou
@@ -49,6 +54,18 @@ public class AbstractIntegrationTest {
         Flyway flyway = new Flyway(conf);
         flyway.clean();
         flyway.migrate();
+    }
+
+    public Cookie loginAndReturnCookie() throws Exception {
+        // 访问 /api/status 处于未登录状态
+        MvcResult result = getRequest("/api/status", null, status().isOk());
+        LoginResponse content = objectMapper.readValue(result.getResponse().getContentAsString(), LoginResponse.class);
+        Assertions.assertFalse(content.isLogin());
+
+        // 访问 /api/login 获取验证码，然后登录，判断是否登录成功
+        postRequest("/api/code", null, VALID_PARAMETER, status().isOk());
+        result = postRequest("/api/login", null, VALID_PARAMETER_CODE, status().isOk());
+        return result.getResponse().getCookie("JSESSIONID");
     }
 
 

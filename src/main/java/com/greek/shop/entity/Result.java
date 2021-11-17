@@ -10,6 +10,8 @@ public class Result<T> {
     T data;
     String msg;
 
+    public Result(){}
+
     protected Result(T data, String msg) {
         this.data = data;
     }
