@@ -2,6 +2,7 @@ package com.greek.shop.controller;
 
 import com.greek.shop.entity.Goods;
 import com.greek.shop.service.GoodsService;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ public class GoodsController {
     private final GoodsService goodsService;
 
     @Autowired
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public GoodsController(GoodsService goodsService) {
         this.goodsService = goodsService;
     }

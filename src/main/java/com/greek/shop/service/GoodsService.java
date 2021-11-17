@@ -30,12 +30,11 @@ public class GoodsService {
 
     public Goods createGoods(Goods goods) {
         Shop shop = shopMapper.selectByPrimaryKey(goods.getShopId());
-        if (Objects.equals(shop.getOwnerUserId(), UserContext.getCurrentUser().getId())) {
-            long id = goodsMapper.insert(goods);
-            goods.setId(id);
-            return goods;
-        }
-        throw HttpException.forbidden("无权访问");
+        checkOperationIsLegal(shop.getOwnerUserId());
+
+        long id = goodsMapper.insert(goods);
+        goods.setId(id);
+        return goods;
     }
 
 
@@ -43,28 +42,24 @@ public class GoodsService {
         Goods goods = goodsMapper.selectByPrimaryKey(goodsId);
         checkGoodsExist(goods);
 
-        // Optional.ofNullable(goods.getShopId())
-        //         .map(shopMapper::selectByPrimaryKey)
-        //         .orElseThrow()
-        if (Objects.equals(goods.getShopId(), UserContext.getCurrentUser().getId())) {
-            goods.setStatus(StatusEnum.DELETE.toString());
-            goodsMapper.updateByPrimaryKey(goods);
-            return goods;
-        }
-        throw HttpException.forbidden("无权访问！");
+        Shop shop = shopMapper.selectByPrimaryKey(goods.getShopId());
+        checkOperationIsLegal(shop.getOwnerUserId());
+        goods.setStatus(StatusEnum.DELETE.toString());
+        goodsMapper.updateByPrimaryKey(goods);
+        return goods;
     }
 
     public Goods updateGoods(Goods goods) {
         Goods goodsInDatabase = goodsMapper.selectByPrimaryKey(goods.getId());
+
         checkGoodsExist(goodsInDatabase);
 
+        Shop shop = shopMapper.selectByPrimaryKey(goods.getShopId());
+        checkOperationIsLegal(shop.getOwnerUserId());
 
-        if (Objects.equals(goods.getShopId(), UserContext.getCurrentUser().getId())) {
-            goods.setUpdatedAt(new Date());
-            goodsMapper.updateByPrimaryKey(goods);
-            return goods;
-        }
-        throw HttpException.forbidden("无权访问！");
+        goods.setUpdatedAt(new Date());
+        goodsMapper.updateByPrimaryKey(goods);
+        return goods;
     }
 
     private void checkGoodsExist(Goods goods) {
@@ -73,16 +68,9 @@ public class GoodsService {
         }
     }
 
-    private void checkOperationIsLegal(Goods goods) {
-
-        // Optional.ofNullable(goods.getShopId())
-        //         .map(shopMapper::selectByPrimaryKey)
-        //         .filter(shop -> Objects.equals(shop.getOwnerUserId(), UserContext.getCurrentUser().getId()))
-        //         .orElseThrow(shop -> HttpException.notFound("商品未找到！"));
-        //
-
-        if (Objects.equals(goods.getShopId(), UserContext.getCurrentUser().getId())) {
-            throw HttpException.notFound("商品未找到！");
+    private void checkOperationIsLegal(Long ownerId) {
+        if (!Objects.equals(ownerId, UserContext.getCurrentUser().getId())) {
+            throw HttpException.forbidden("无权访问！");
         }
     }
 }
