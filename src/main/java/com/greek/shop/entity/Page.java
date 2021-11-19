@@ -17,8 +17,13 @@ public class Page<T> {
     public Page() {
     }
 
-    public static <T> Page<T> of(int pageNum, int pageSize) {
-        return null;
+    public static <T> Page<T> of(int pageNum, int pageSize, int totalPage, List<T> data) {
+        Page<T> result = new Page<>();
+        result.setTotalPage(totalPage);
+        result.setPageNum(pageNum);
+        result.setPageSize(pageSize);
+        result.setData(data);
+        return result;
     }
 
 

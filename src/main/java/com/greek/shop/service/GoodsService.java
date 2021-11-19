@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -53,7 +54,6 @@ public class GoodsService {
 
     public Goods updateGoods(Goods goods) {
         Goods goodsInDatabase = goodsMapper.selectByPrimaryKey(goods.getId());
-
         checkGoodsExist(goodsInDatabase);
 
         Shop shop = shopMapper.selectByPrimaryKey(goods.getShopId());
@@ -78,8 +78,14 @@ public class GoodsService {
 
     public Page<Goods> getGoodsPage(int pageNum, int pageSize, Long shopId) {
         int totalNumber = countGoods(shopId);
-        // Page<Goods> goodsPage = Page.of();
-        return null;
+        int totalPage = totalNumber % pageSize == 0 ? totalNumber / pageSize : totalNumber / pageSize + 1;
+
+        GoodsExample page = new GoodsExample();
+        page.setLimit(pageSize);
+        page.setOffset((pageNum - 1) * pageSize);
+
+        List<Goods> goodsList = goodsMapper.selectByExample(page);
+        return Page.of(pageNum, pageSize, totalPage, goodsList);
     }
 
     private int countGoods(Long shopId) {
