@@ -53,14 +53,14 @@ public class GoodsService {
     }
 
     public Goods updateGoods(Goods goods) {
-        Goods goodsInDatabase = goodsMapper.selectByPrimaryKey(goods.getId());
-        checkGoodsExist(goodsInDatabase);
-
         Shop shop = shopMapper.selectByPrimaryKey(goods.getShopId());
         checkOperationIsLegal(shop.getOwnerUserId());
 
         goods.setUpdatedAt(new Date());
-        goodsMapper.updateByPrimaryKey(goods);
+        int updateRows = goodsMapper.updateByPrimaryKey(goods);
+        if (updateRows == 0) {
+            throw HttpException.notFound("商品未找到！");
+        }
         return goods;
     }
 

@@ -37,7 +37,7 @@ public class GoodsController {
 
     @PostMapping("/goods")
     @ResponseStatus(HttpStatus.CREATED)
-    public Goods createGoods(@RequestBody Goods goods) {
+    public Goods createGoods(@RequestBody @Valid Goods goods) {
         clean(goods);
         return goodsService.createGoods(goods);
     }
@@ -54,7 +54,7 @@ public class GoodsController {
         return goodsService.deleteGoodsById(goodsId);
     }
 
-    @PatchMapping("/goods/{id}")
+    @PatchMapping("/goods")
     public Goods updateGoods(@RequestBody @Valid Goods goods) {
         return goodsService.updateGoods(goods);
     }

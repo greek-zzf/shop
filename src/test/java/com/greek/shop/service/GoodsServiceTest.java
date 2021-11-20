@@ -3,8 +3,10 @@ package com.greek.shop.service;
 import com.greek.shop.dao.GoodsMapper;
 import com.greek.shop.dao.ShopMapper;
 import com.greek.shop.entity.Goods;
+import com.greek.shop.entity.Page;
 import com.greek.shop.entity.Shop;
 import com.greek.shop.entity.User;
+import com.greek.shop.enums.StatusEnum;
 import com.greek.shop.exception.HttpException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,10 +14,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -67,19 +73,60 @@ class GoodsServiceTest {
         when(shopMapper.selectByPrimaryKey(anyLong())).thenReturn(shop);
         when(shop.getOwnerUserId()).thenReturn(2L);
 
-        assertThrows(HttpException.class, () -> goodsService.createGoods(goods));
+        HttpException forbiddenException = assertThrows(HttpException.class, () -> goodsService.createGoods(goods));
+        assertEquals(forbiddenException.getMessage(), "无权访问！");
     }
 
 
     @Test
-    void deleteGoodsById() {
+    void deleteGoodsThrowsNotFoundExceptionIfNotOwner() {
+        when(goodsMapper.selectByPrimaryKey(anyLong())).thenReturn(null);
+        HttpException notFoundException = assertThrows(HttpException.class, () -> goodsService.deleteGoodsById(anyLong()));
+        assertEquals(notFoundException.getMessage(), "商品未找到！");
     }
 
     @Test
-    void updateGoods() {
+    void deleteGoodsSucceed() {
+        long goodsToBeDeleted = 123;
+        when(goodsMapper.selectByPrimaryKey(anyLong())).thenReturn(goods);
+        when(goods.getShopId()).thenReturn(goodsToBeDeleted);
+        when(shopMapper.selectByPrimaryKey(goodsToBeDeleted)).thenReturn(shop);
+        when(shop.getOwnerUserId()).thenReturn(1L);
+
+        goodsService.deleteGoodsById(goodsToBeDeleted);
+        verify(goods).setStatus(StatusEnum.DELETE.toString());
+        verify(goodsMapper).updateByPrimaryKey(goods);
+    }
+
+    @Test
+    void updateGoodsSucceed() {
+        when(shopMapper.selectByPrimaryKey(anyLong())).thenReturn(shop);
+        when(shop.getOwnerUserId()).thenReturn(1L);
+        when(goodsMapper.updateByPrimaryKey(goods)).thenReturn(1);
+
+        assertEquals(goods, goodsService.updateGoods(goods));
+    }
+
+
+    @Test
+    void updateGoodsFailed() {
+        HttpException notFoundException = assertThrows(HttpException.class, () -> goodsService.deleteGoodsById(anyLong()));
+        assertEquals(notFoundException.getMessage(), "商品未找到！");
     }
 
     @Test
     void getGoodsPage() {
+        int pageNumber = 5;
+        int pageSize = 10;
+        List<Goods> mockGoodsList = Mockito.mock(List.class);
+
+        when(goodsMapper.countByExample(any())).thenReturn(55L);
+        when(goodsMapper.selectByExample(any())).thenReturn(mockGoodsList);
+
+        Page<Goods> goodsPage = goodsService.getGoodsPage(pageNumber, pageSize, 456L);
+        assertEquals(goodsPage.getPageNum(), 5);
+        assertEquals(goodsPage.getPageSize(), 10);
+        assertEquals(goodsPage.getTotalPage(), 6);
+        assertEquals(goodsPage.getData(), mockGoodsList);
     }
 }
