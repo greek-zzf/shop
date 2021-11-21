@@ -2,6 +2,7 @@ package com.greek.shop.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greek.shop.entity.LoginResponse;
+import com.greek.shop.entity.User;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.configuration.ClassicConfiguration;
 import org.junit.jupiter.api.Assertions;
@@ -56,7 +57,7 @@ public class AbstractIntegrationTest {
         flyway.migrate();
     }
 
-    public Cookie loginAndReturnCookie() throws Exception {
+    public CookieAndUser loginAndReturnCookie() throws Exception {
         // 访问 /api/status 处于未登录状态
         MvcResult result = getRequest("/api/status", null, status().isOk());
         LoginResponse content = objectMapper.readValue(result.getResponse().getContentAsString(), LoginResponse.class);
@@ -65,7 +66,12 @@ public class AbstractIntegrationTest {
         // 访问 /api/login 获取验证码，然后登录，判断是否登录成功
         postRequest("/api/code", null, VALID_PARAMETER, status().isOk());
         result = postRequest("/api/login", null, VALID_PARAMETER_CODE, status().isOk());
-        return result.getResponse().getCookie("JSESSIONID");
+
+        Cookie sessionCookie = result.getResponse().getCookie("JSESSIONID");
+
+        result = getRequest("/api/status", sessionCookie, status().isOk());
+        User user = objectMapper.readValue(result.getResponse().getContentAsString(), LoginResponse.class).getUser();
+        return new CookieAndUser(sessionCookie, user);
     }
 
 
@@ -89,5 +95,23 @@ public class AbstractIntegrationTest {
                 .content(objectMapper.writeValueAsString(requestBody)))
                 .andExpect(resultMatcher)
                 .andReturn();
+    }
+
+    public static class CookieAndUser {
+        private Cookie cookie;
+        private User user;
+
+        public CookieAndUser(Cookie cookie, User user) {
+            this.cookie = cookie;
+            this.user = user;
+        }
+
+        public Cookie getCookie() {
+            return cookie;
+        }
+
+        public User getUser() {
+            return user;
+        }
     }
 }

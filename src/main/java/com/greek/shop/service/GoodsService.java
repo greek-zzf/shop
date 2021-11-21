@@ -35,6 +35,7 @@ public class GoodsService {
         Shop shop = shopMapper.selectByPrimaryKey(goods.getShopId());
         checkOperationIsLegal(shop.getOwnerUserId());
 
+        goods.setStatus(StatusEnum.OK.getName());
         long id = goodsMapper.insert(goods);
         goods.setId(id);
         return goods;

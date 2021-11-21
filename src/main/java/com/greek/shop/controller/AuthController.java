@@ -45,7 +45,7 @@ public class AuthController {
 
 
     @GetMapping("/status")
-    public Object loginStatus() {
+    public LoginResponse loginStatus() {
         return Optional.ofNullable(UserContext.getCurrentUser())
                 .map(LoginResponse::login)
                 .orElse(LoginResponse.notLogin());

@@ -34,7 +34,7 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void loginLogoutTest() throws Exception {
-        Cookie sessionCookie = loginAndReturnCookie();
+        Cookie sessionCookie = loginAndReturnCookie().getCookie();
 
         // 访问 /api/status 获取登录的用户信息
         MvcResult result = getRequest("/api/status", sessionCookie, status().isOk());
