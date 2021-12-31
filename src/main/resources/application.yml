@@ -4,7 +4,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: 123456
-    url: jdbc:mysql://127.0.0.1/wxshop?useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://192.168.20.111/wxshop?useSSL=false&allowPublicKeyRetrieval=true
 
 mybatis:
   mapper-locations:

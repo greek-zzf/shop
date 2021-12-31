@@ -4,6 +4,7 @@ create table USER
     NAME       varchar(100),
     TEL        varchar(100) unique,
     AVATAR_URL varchar(1024),
+    ADDRESS varchar(100),
     CREATE_AT  timestamp,
     UPDATE_AT  timestamp
 
