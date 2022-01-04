@@ -1,7 +1,10 @@
 package com.greek.shop.dao;
 
+import com.greek.shop.entity.ShoppingCartData;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * @author Zhaofeng Zhou
@@ -10,4 +13,8 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface ShoppingCartQueryMapper {
     int countShopInUserShoppingCart(@Param("userId") long userId);
+
+    List<ShoppingCartData> selectShoppingCartDataByUserId(@Param("userId") long userId,
+                                                          @Param("offset") int offset,
+                                                          @Param("limit") int limit);
 }

@@ -1,21 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.greek.shop.dao.ShoppingCartQueryMapper">
-    <resultMap id="BaseResultMap" type="com.greek.shop.entity.ShoppingCart">
-        <id column="ID" jdbcType="BIGINT" property="id"/>
-        <result column="USER_ID" jdbcType="BIGINT" property="userId"/>
-        <result column="GOODS_ID" jdbcType="BIGINT" property="goodsId"/>
-        <result column="SHOP_ID" jdbcType="BIGINT" property="shopId"/>
-        <result column="NUMBER" jdbcType="INTEGER" property="number"/>
-        <result column="STATUS" jdbcType="VARCHAR" property="status"/>
-        <result column="CREATED_AT" jdbcType="TIMESTAMP" property="createdAt"/>
-        <result column="UPDATED_AT" jdbcType="TIMESTAMP" property="updatedAt"/>
-    </resultMap>
 
     <select id="countShopInUserShoppingCart" resultType="int" parameterType="long">
-    SELECT COUNT(DISTINCT(GOODS_ID))
-    FROM SHOPPING_CART
-    WHERE USER_ID = #{userId} AND `STATUS` = 'ok'
+        SELECT COUNT(DISTINCT(GOODS_ID))
+        FROM SHOPPING_CART
+        WHERE USER_ID = #{userId} AND `STATUS` = 'ok'
     </select>
+
+    <select id="selectShoppingCartDataByUserId" resultMap="getShoppingCartResultMap" parameterType="Map">
+        SELECT
+            s.ID as SHOP_ID,
+            s.NAME as SHOP_NAME,
+            s.DESCRIPTION as SHOP_DESCRIPTION,
+            s.IMG_URL as SHOP_IMG_URL,
+            s.OWNER_USER_ID as SHOP_OWNER_USER_ID,
+            s.CREATED_AT as SHOP_CREATED_AT,
+            s.UPDATED_AT as SHOP_UPDATED_AT,
+            g.ID as GOODS_ID,
+            g.NAME as GOODS_NAME,
+            g.DESCRIPTION as GOODS_DESCRIPTION,
+            g.DETAILS as GOODS_DETAILS,
+            g.IMG_URL as GOODS_IMG_URL,
+            g.PRICE as GOODS_PRICE,
+            t1.NUMBER as GOODS_NUMBER,
+            g.CREATED_AT as GOODS_CREATED_AT,
+            g.UPDATED_AT as GOODS_UPDATED_AT
+        FROM
+            ( SELECT DISTINCT SHOP_ID FROM SHOPPING_CART WHERE USER_ID = #{userId} AND `STATUS` = 'OK' LIMIT #{offset}, #{limit} ) t
+            INNER JOIN SHOPPING_CART t1 on t1.SHOP_ID = t.SHOP_ID
+            INNER JOIN GOODS g ON g.id = t1.GOODS_ID
+            INNER JOIN SHOP s ON s.id = t1.SHOP_ID
+    </select>
+
+    <resultMap id="getShoppingCartResultMap" type="com.greek.shop.entity.ShoppingCartData">
+        <association property="shop" javaType="com.greek.shop.entity.Shop">
+            <id property="id" column="SHOP_ID"/>
+            <result property="description" column="SHOP_DESCRIPTION"/>
+            <result property="imgUrl" column="SHOP_IMG_URL"/>
+            <result property="ownerUserId" column="SHOP_OWNER_USER_ID"/>
+            <result property="createdAt" column="SHOP_CREATED_AT"/>
+            <result property="updatedAt" column="SHOP_UPDATED_AT"/>
+        </association>
+        <collection property="goods" ofType="com.greek.shop.entity.ShoppingCartGoods">
+            <id property="id" column="GOODS_ID"/>
+            <result property="NAME" column="GOODS_NAME"/>
+            <result property="description" column="GOODS_DESCRIPTION"/>
+            <result property="details" column="GOODS_DETAILS"/>
+            <result property="imgUrl" column="GOODS_IMG_URL"/>
+            <result property="price" column="GOODS_PRICE"/>
+            <result property="number" column="GOODS_NUMBER"/>
+            <result property="createdAt" column="GOODS_CREATED_AT"/>
+            <result property="updatedAt" column="GOODS_UPDATED_AT"/>
+        </collection>
+    </resultMap>
+
 
 </mapper>
