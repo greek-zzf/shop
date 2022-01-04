@@ -44,7 +44,7 @@
         </association>
         <collection property="goods" ofType="com.greek.shop.entity.ShoppingCartGoods">
             <id property="id" column="GOODS_ID"/>
-            <result property="NAME" column="GOODS_NAME"/>
+            <result property="name" column="GOODS_NAME"/>
             <result property="description" column="GOODS_DESCRIPTION"/>
             <result property="details" column="GOODS_DETAILS"/>
             <result property="imgUrl" column="GOODS_IMG_URL"/>

@@ -24,12 +24,12 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void returnHttpOkWhenParameterIsCorrect() throws Exception {
-        postRequest("/api/code", null, VALID_PARAMETER, status().isOk());
+        postRequest("/api/v1/code", null, VALID_PARAMETER, status().isOk());
     }
 
     @Test
     public void returnHttpBadRequestWhenParameterIsNotCorrect() throws Exception {
-        postRequest("/api/code", null, INVALID_PARAMETER, status().isBadRequest());
+        postRequest("/api/v1/code", null, INVALID_PARAMETER, status().isBadRequest());
     }
 
     @Test
@@ -37,22 +37,22 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
         Cookie sessionCookie = loginAndReturnCookie().getCookie();
 
         // 访问 /api/status 获取登录的用户信息
-        MvcResult result = getRequest("/api/status", sessionCookie, status().isOk());
+        MvcResult result = getRequest("/api/v1/status", sessionCookie, status().isOk());
         LoginResponse content = objectMapper.readValue(result.getResponse().getContentAsString(), LoginResponse.class);
         Assertions.assertTrue(content.isLogin());
         Assertions.assertEquals(VALID_PARAMETER.getTel(), content.getUser().getTel());
 
         // 访问 /api/logout 登出，判断是否登出成功
-        postRequest("/api/logout", sessionCookie, "", status().isOk());
+        postRequest("/api/v1/logout", sessionCookie, "", status().isOk());
 
         // 访问 /api/status 处于未登录状态
-        result = getRequest("/api/status", null, status().isOk());
+        result = getRequest("/api/v1/status", null, status().isOk());
         content = objectMapper.readValue(result.getResponse().getContentAsString(), LoginResponse.class);
         Assertions.assertFalse(content.isLogin());
     }
 
     @Test
     public void returnUnauthorizedNotLogin() throws Exception {
-        postRequest("/api/any", null, "", status().isUnauthorized());
+        postRequest("/api/v1/any", null, "", status().isUnauthorized());
     }
 }

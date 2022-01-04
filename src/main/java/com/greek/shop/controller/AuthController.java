@@ -20,7 +20,7 @@ import java.util.Optional;
  */
 @RestController
 @Validated
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class AuthController {
 
     private final AuthService authService;

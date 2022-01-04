@@ -41,10 +41,10 @@ public class ShiroConfig implements WebMvcConfigurer {
         shiroFilterFactoryBean.setSecurityManager(securityManager);
 
         Map<String, String> patten = new HashMap<>();
-        patten.put("/api/code", "anon");
-        patten.put("/api/login", "anon");
-        patten.put("/api/status", "anon");
-        patten.put("/api/logout", "anon");
+        patten.put("/api/v1/code", "anon");
+        patten.put("/api/v1/login", "anon");
+        patten.put("/api/v1/status", "anon");
+        patten.put("/api/v1/logout", "anon");
         patten.put("/**", "shiroLoginFilter");
 
         Map<String, Filter> filterMap = new LinkedHashMap<>();

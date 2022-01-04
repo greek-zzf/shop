@@ -1,5 +1,7 @@
 package com.greek.shop.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greek.shop.entity.LoginResponse;
 import com.greek.shop.entity.User;
@@ -18,6 +20,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import javax.servlet.http.Cookie;
+import java.io.UnsupportedEncodingException;
 
 import static com.greek.shop.service.PhoneNumberValidatorTest.VALID_PARAMETER;
 import static com.greek.shop.service.PhoneNumberValidatorTest.VALID_PARAMETER_CODE;
@@ -59,17 +62,17 @@ public class AbstractIntegrationTest {
 
     public CookieAndUser loginAndReturnCookie() throws Exception {
         // 访问 /api/status 处于未登录状态
-        MvcResult result = getRequest("/api/status", null, status().isOk());
+        MvcResult result = getRequest("/api/v1/status", null, status().isOk());
         LoginResponse content = objectMapper.readValue(result.getResponse().getContentAsString(), LoginResponse.class);
         Assertions.assertFalse(content.isLogin());
 
         // 访问 /api/login 获取验证码，然后登录，判断是否登录成功
-        postRequest("/api/code", null, VALID_PARAMETER, status().isOk());
-        result = postRequest("/api/login", null, VALID_PARAMETER_CODE, status().isOk());
+        postRequest("/api/v1/code", null, VALID_PARAMETER, status().isOk());
+        result = postRequest("/api/v1/login", null, VALID_PARAMETER_CODE, status().isOk());
 
         Cookie sessionCookie = result.getResponse().getCookie("JSESSIONID");
 
-        result = getRequest("/api/status", sessionCookie, status().isOk());
+        result = getRequest("/api/v1/status", sessionCookie, status().isOk());
         User user = objectMapper.readValue(result.getResponse().getContentAsString(), LoginResponse.class).getUser();
         return new CookieAndUser(sessionCookie, user);
     }
@@ -95,6 +98,11 @@ public class AbstractIntegrationTest {
                 .content(objectMapper.writeValueAsString(requestBody)))
                 .andExpect(resultMatcher)
                 .andReturn();
+    }
+
+    public <T> T asJsonObject(MvcResult result) throws UnsupportedEncodingException, JsonProcessingException {
+        return objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<T>() {
+        });
     }
 
     public static class CookieAndUser {

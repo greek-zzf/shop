@@ -20,7 +20,7 @@ public class PhoneNumberValidatorTest extends AbstractIntegrationTest {
 
     @Test
     public void TelIsNull() throws Exception {
-        postRequest("/api/code", null, NULL_PARAMETER, status().isBadRequest());
+        postRequest("/api/v1/code", null, NULL_PARAMETER, status().isBadRequest());
     }
 
 }
