@@ -49,8 +49,7 @@ public class ShopService {
         shop.setOwnerUserId(creatorId);
         shop.setUpdatedAt(new Date());
         shop.setCreatedAt(new Date());
-        int insertId = shopMapper.insert(shop);
-        shop.setId((long) insertId);
+        shopMapper.insert(shop);
         return shop;
     }
 

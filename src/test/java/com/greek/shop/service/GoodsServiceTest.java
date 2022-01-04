@@ -37,12 +37,12 @@ class GoodsServiceTest {
     GoodsMapper goodsMapper;
     @Mock
     ShopMapper shopMapper;
-    @InjectMocks
-    GoodsService goodsService;
     @Mock
     Shop shop;
     @Mock
     Goods goods;
+    @InjectMocks
+    GoodsService goodsService;
 
     @BeforeEach
     void initUserContext() {
@@ -64,8 +64,6 @@ class GoodsServiceTest {
         when(goodsMapper.insert(goods)).thenReturn(123);
 
         assertEquals(goods, goodsService.createGoods(goods));
-        verify(goods).setId(123L);
-
     }
 
     @Test

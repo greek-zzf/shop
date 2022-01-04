@@ -51,6 +51,7 @@ public class GoodsIntegrationTest extends AbstractIntegrationTest {
         goods.setStock(10);
         goods.setShopId(shopResult.getData().getId());
 
+
         result = postRequest("/api/v1/goods", cookieAndUser.getCookie(), goods, status().isCreated());
         Result<Goods> response = objectMapper.readValue(result.getResponse().getContentAsString(StandardCharsets.UTF_8), new TypeReference<Result<Goods>>() {
         });

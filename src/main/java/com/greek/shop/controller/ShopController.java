@@ -4,6 +4,7 @@ import com.greek.shop.entity.Page;
 import com.greek.shop.entity.Shop;
 import com.greek.shop.service.ShopService;
 import com.greek.shop.service.UserContext;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ public class ShopController {
     private final ShopService shopService;
 
     @Autowired
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public ShopController(ShopService shopService) {
         this.shopService = shopService;
     }

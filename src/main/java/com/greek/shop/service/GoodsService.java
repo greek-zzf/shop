@@ -36,8 +36,7 @@ public class GoodsService {
         checkOperationIsLegal(shop.getOwnerUserId());
 
         goods.setStatus(StatusEnum.OK.getName());
-        long id = goodsMapper.insert(goods);
-        goods.setId(id);
+        goodsMapper.insert(goods);
         return goods;
     }
 
