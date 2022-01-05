@@ -2,13 +2,11 @@ package com.greek.shop.controller;
 
 import com.greek.shop.entity.Page;
 import com.greek.shop.entity.ShoppingCartData;
+import com.greek.shop.entity.vo.AddToShoppingCartRequest;
 import com.greek.shop.service.ShoppingCartService;
 import com.greek.shop.service.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Zhaofeng Zhou
@@ -29,6 +27,11 @@ public class ShoppingCartController {
     public Page<ShoppingCartData> getShoppingCart(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
                                                   @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
         return shoppingCartService.getShoppingCartOfUser(UserContext.getCurrentUser().getId(), pageNum, pageSize);
+    }
+
+    @PostMapping("/shoppingCart")
+    public ShoppingCartData addToShoppingCart(@RequestBody AddToShoppingCartRequest request) {
+        return shoppingCartService.addToShoppingCart(request);
     }
 
 }

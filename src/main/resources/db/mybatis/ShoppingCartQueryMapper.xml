@@ -3,35 +3,65 @@
 <mapper namespace="com.greek.shop.dao.ShoppingCartQueryMapper">
 
     <select id="countShopInUserShoppingCart" resultType="int" parameterType="long">
-        SELECT COUNT(DISTINCT(SHOP_ID))
+        SELECT COUNT(DISTINCT (SHOP_ID))
         FROM SHOPPING_CART
-        WHERE USER_ID = #{userId} AND `STATUS` = 'ok'
+        WHERE USER_ID = #{userId}
+          AND `STATUS` = 'ok'
     </select>
 
     <select id="selectShoppingCartDataByUserId" resultMap="getShoppingCartResultMap" parameterType="Map">
-        SELECT
-            s.ID as SHOP_ID,
-            s.NAME as SHOP_NAME,
-            s.DESCRIPTION as SHOP_DESCRIPTION,
-            s.IMG_URL as SHOP_IMG_URL,
-            s.OWNER_USER_ID as SHOP_OWNER_USER_ID,
-            s.CREATED_AT as SHOP_CREATED_AT,
-            s.UPDATED_AT as SHOP_UPDATED_AT,
-            g.ID as GOODS_ID,
-            g.NAME as GOODS_NAME,
-            g.DESCRIPTION as GOODS_DESCRIPTION,
-            g.DETAILS as GOODS_DETAILS,
-            g.IMG_URL as GOODS_IMG_URL,
-            g.PRICE as GOODS_PRICE,
-            t1.NUMBER as GOODS_NUMBER,
-            g.CREATED_AT as GOODS_CREATED_AT,
-            g.UPDATED_AT as GOODS_UPDATED_AT
-        FROM
-            ( SELECT DISTINCT SHOP_ID FROM SHOPPING_CART WHERE USER_ID = #{userId} AND `STATUS` = 'OK' LIMIT #{offset}, #{limit} ) t
-            INNER JOIN SHOPPING_CART t1 on t1.SHOP_ID = t.SHOP_ID
-            INNER JOIN GOODS g ON g.id = t1.GOODS_ID
-            INNER JOIN SHOP s ON s.id = t1.SHOP_ID
+        SELECT s.ID            as SHOP_ID,
+               s.NAME          as SHOP_NAME,
+               s.DESCRIPTION   as SHOP_DESCRIPTION,
+               s.IMG_URL       as SHOP_IMG_URL,
+               s.OWNER_USER_ID as SHOP_OWNER_USER_ID,
+               s.CREATED_AT    as SHOP_CREATED_AT,
+               s.UPDATED_AT    as SHOP_UPDATED_AT,
+               g.ID            as GOODS_ID,
+               g.NAME          as GOODS_NAME,
+               g.DESCRIPTION   as GOODS_DESCRIPTION,
+               g.DETAILS       as GOODS_DETAILS,
+               g.IMG_URL       as GOODS_IMG_URL,
+               g.PRICE         as GOODS_PRICE,
+               t1.NUMBER       as GOODS_NUMBER,
+               g.CREATED_AT    as GOODS_CREATED_AT,
+               g.UPDATED_AT    as GOODS_UPDATED_AT
+        FROM (SELECT DISTINCT SHOP_ID
+              FROM SHOPPING_CART
+              WHERE USER_ID = #{userId}
+                AND `STATUS` = 'OK' LIMIT #{offset}
+                  , #{limit}) t
+                 INNER JOIN SHOPPING_CART t1 on t1.SHOP_ID = t.SHOP_ID
+                 INNER JOIN GOODS g ON g.id = t1.GOODS_ID
+                 INNER JOIN SHOP s ON s.id = t1.SHOP_ID
     </select>
+
+
+    <select id="selectShoppingCartDataByUserIdShopId" resultMap="getShoppingCartResultMap" parameterType="Map">
+        SELECT s.ID                 as SHOP_ID,
+               s.NAME               as SHOP_NAME,
+               s.DESCRIPTION        as SHOP_DESCRIPTION,
+               s.IMG_URL            as SHOP_IMG_URL,
+               s.OWNER_USER_ID      as SHOP_OWNER_USER_ID,
+               s.CREATED_AT         as SHOP_CREATED_AT,
+               s.UPDATED_AT         as SHOP_UPDATED_AT,
+               g.ID                 as GOODS_ID,
+               g.NAME               as GOODS_NAME,
+               g.DESCRIPTION        as GOODS_DESCRIPTION,
+               g.DETAILS            as GOODS_DETAILS,
+               g.IMG_URL            as GOODS_IMG_URL,
+               g.PRICE              as GOODS_PRICE,
+               SHOPPING_CART.NUMBER as GOODS_NUMBER,
+               g.CREATED_AT         as GOODS_CREATED_AT,
+               g.UPDATED_AT         as GOODS_UPDATED_AT
+        FROM SHOPPING_CART
+                 INNER JOIN GOODS g ON g.id = t1.GOODS_ID
+                 INNER JOIN SHOP s ON s.id = t1.SHOP_ID
+        WHERE SHOPPING_CART.USER_ID = #{userId}
+          AND `STATUS` = 'OK'
+          AND SHOPPING_CART.SHOP_ID = #{shopId}
+    </select>
+
 
     <resultMap id="getShoppingCartResultMap" type="com.greek.shop.entity.ShoppingCartData">
         <association property="shop" javaType="com.greek.shop.entity.Shop">
