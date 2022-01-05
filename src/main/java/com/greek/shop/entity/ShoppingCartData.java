@@ -1,12 +1,13 @@
 package com.greek.shop.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author Zhaofeng Zhou
  * @date 2022/1/4 16:47
  */
-public class ShoppingCartData {
+public class ShoppingCartData implements Serializable {
     Shop shop;
     List<ShoppingCartGoods> goods;
 

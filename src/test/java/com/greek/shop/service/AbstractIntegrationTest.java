@@ -100,9 +100,8 @@ public class AbstractIntegrationTest {
                 .andReturn();
     }
 
-    public <T> T asJsonObject(MvcResult result) throws UnsupportedEncodingException, JsonProcessingException {
-        return objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<T>() {
-        });
+    public <T> T asJsonObject(MvcResult result, TypeReference<T> typeReference) throws UnsupportedEncodingException, JsonProcessingException {
+        return objectMapper.readValue(result.getResponse().getContentAsString(), typeReference);
     }
 
     public static class CookieAndUser {

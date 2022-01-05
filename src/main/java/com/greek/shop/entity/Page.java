@@ -1,5 +1,6 @@
 package com.greek.shop.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
  * @author Zhaofeng Zhou
  * @date 2021/11/17/017 17:46
  */
-public class Page<T> {
+public class Page<T> implements Serializable {
     int pageNum;
     int pageSize;
     int totalPage;

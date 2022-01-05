@@ -1,6 +1,7 @@
 package com.greek.shop.global;
 
 import com.greek.shop.entity.LoginResponse;
+import com.greek.shop.entity.Page;
 import com.greek.shop.entity.Result;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -27,6 +28,6 @@ public class GlobalResponseHandler implements ResponseBodyAdvice {
     }
 
     private boolean needConvert(Object object) {
-        return !(object instanceof Result || object instanceof LoginResponse);
+        return !(object instanceof Result || object instanceof LoginResponse || object instanceof Page);
     }
 }

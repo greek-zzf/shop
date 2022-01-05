@@ -3,7 +3,7 @@
 <mapper namespace="com.greek.shop.dao.ShoppingCartQueryMapper">
 
     <select id="countShopInUserShoppingCart" resultType="int" parameterType="long">
-        SELECT COUNT(DISTINCT(GOODS_ID))
+        SELECT COUNT(DISTINCT(SHOP_ID))
         FROM SHOPPING_CART
         WHERE USER_ID = #{userId} AND `STATUS` = 'ok'
     </select>

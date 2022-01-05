@@ -1,5 +1,6 @@
 package com.greek.shop.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.greek.shop.ShopApplication;
 import com.greek.shop.entity.Goods;
 import com.greek.shop.entity.Page;
@@ -23,13 +24,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = ShopApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ShoppingCartIntegration extends AbstractIntegrationTest {
+public class ShoppingCartIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void getShoppingCartPage() throws Exception {
         CookieAndUser cookieAndUser = loginAndReturnCookie();
         MvcResult result = getRequest("/api/v1/shoppingCart?pageNum=2&pageSize=1", cookieAndUser.getCookie(), status().isOk());
-        Page<ShoppingCartData> pageData = asJsonObject(result);
+        Page<ShoppingCartData> pageData = asJsonObject(result, new TypeReference<Page<ShoppingCartData>>() {
+        });
 
         Assertions.assertEquals(2, pageData.getPageNum());
         Assertions.assertEquals(1, pageData.getPageSize());
