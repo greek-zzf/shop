@@ -1,11 +1,10 @@
 package com.greek.shop.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.collect.Sets;
 import com.greek.shop.ShopApplication;
-import com.greek.shop.entity.Goods;
-import com.greek.shop.entity.Page;
-import com.greek.shop.entity.ShoppingCartData;
-import com.greek.shop.entity.ShoppingCartGoods;
+import com.greek.shop.entity.*;
+import com.greek.shop.entity.vo.AddToShoppingCartRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,8 +13,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -58,5 +59,26 @@ public class ShoppingCartIntegrationTest extends AbstractIntegrationTest {
                         .collect(toList()));
 
     }
+
+    @Test
+    void canAddShoppingCartData() throws Exception {
+        CookieAndUser cookieAndUser = loginAndReturnCookie();
+
+        AddToShoppingCartRequest request = new AddToShoppingCartRequest();
+        ShoppingCartGoods item = new ShoppingCartGoods();
+        item.setId(2L);
+        item.setNumber(2);
+
+        request.setGoods(Collections.singletonList(item));
+        MvcResult response = postRequest("/api/v1/shoppingCart", cookieAndUser.getCookie(), request, status().isOk());
+        Result<ShoppingCartData> result = asJsonObject(response, new TypeReference<Result<ShoppingCartData>>() {
+        });
+
+        Assertions.assertEquals(1, result.getData().getShop().getId());
+        Assertions.assertEquals(Arrays.asList(1L, 2L), result.getData().getGoods().stream().map(Goods::getId).collect(toList()));
+        Assertions.assertEquals(Sets.newHashSet(2, 100), result.getData().getGoods().stream().map(ShoppingCartGoods::getNumber).collect(toSet()));
+        Assertions.assertTrue(result.getData().getGoods().stream().allMatch(goods -> goods.getShopId() == 1L));
+    }
+
 
 }

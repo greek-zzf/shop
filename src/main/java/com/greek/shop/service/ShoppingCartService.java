@@ -10,10 +10,7 @@ import com.greek.shop.exception.HttpException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -68,6 +65,7 @@ public class ShoppingCartService {
         List<Long> goodsId = request.getGoods()
                 .stream()
                 .map(ShoppingCartGoods::getId)
+                .filter(Objects::nonNull)
                 .collect(toList());
 
         if (goodsId.isEmpty()) {
