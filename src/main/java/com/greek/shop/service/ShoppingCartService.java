@@ -61,7 +61,7 @@ public class ShoppingCartService {
         return result;
     }
 
-    public ShoppingCartData addToShoppingCart(AddToShoppingCartRequest request) {
+    public ShoppingCartData addToShoppingCart(AddToShoppingCartRequest request, long userId) {
         List<Long> goodsId = request.getGoods()
                 .stream()
                 .map(ShoppingCartGoods::getId)
@@ -88,10 +88,12 @@ public class ShoppingCartService {
                 .collect(toList());
 
         shoppingCartRows.forEach(shoppingCartMapper::insert);
+        return getLatestShoppingCartDataByUserIdShopId(goods.get(0).getShopId(), userId);
+    }
 
-        return merge(shoppingCartQueryMapper.selectShoppingCartDataByUserIdShopId(
-                UserContext.getCurrentUser().getId(),
-                goods.get(0).getShopId()));
+    private ShoppingCartData getLatestShoppingCartDataByUserIdShopId(long shopId, long userId) {
+        List<ShoppingCartData> resultRows = shoppingCartQueryMapper.selectShoppingCartDataByUserIdShopId(userId, shopId);
+        return merge(resultRows);
     }
 
 
@@ -110,5 +112,15 @@ public class ShoppingCartService {
         result.setCreatedAt(new Date());
         result.setUpdatedAt(new Date());
         return result;
+    }
+
+    public ShoppingCartData deleteGoodsInShoppingCart(long goodsId, long userId) {
+        Goods goods = goodsMapper.selectByPrimaryKey(goodsId);
+        if (goods == null) {
+            throw HttpException.badRequest("商品未找到" + goodsId);
+        }
+
+        shoppingCartQueryMapper.deleteShoppingCart(goodsId, userId);
+        return getLatestShoppingCartDataByUserIdShopId(goods.getShopId(), userId);
     }
 }

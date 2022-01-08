@@ -20,4 +20,8 @@ public interface ShoppingCartQueryMapper {
 
     List<ShoppingCartData> selectShoppingCartDataByUserIdShopId(@Param("userId") long userId,
                                                                 @Param("shopId") long shopId);
+
+
+    void deleteShoppingCart(@Param("goodsId") long goodsId,
+                            @Param("userId") long userId);
 }

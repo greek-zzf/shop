@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import com.greek.shop.ShopApplication;
 import com.greek.shop.entity.*;
 import com.greek.shop.entity.vo.AddToShoppingCartRequest;
+import com.greek.shop.enums.StatusEnum;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -78,6 +79,23 @@ public class ShoppingCartIntegrationTest extends AbstractIntegrationTest {
         Assertions.assertEquals(Arrays.asList(1L, 2L), result.getData().getGoods().stream().map(Goods::getId).collect(toList()));
         Assertions.assertEquals(Sets.newHashSet(2, 100), result.getData().getGoods().stream().map(ShoppingCartGoods::getNumber).collect(toSet()));
         Assertions.assertTrue(result.getData().getGoods().stream().allMatch(goods -> goods.getShopId() == 1L));
+    }
+
+    @Test
+    void canDeleteShoppingCartData() throws Exception {
+        CookieAndUser cookieAndUser = loginAndReturnCookie();
+
+        MvcResult response = deleteRequest("/api/v1/shoppingCart/5", cookieAndUser.getCookie(), status().isOk());
+        Result<ShoppingCartData> result = asJsonObject(response, new TypeReference<Result<ShoppingCartData>>() {
+        });
+
+        Assertions.assertEquals(2, result.getData().getShop().getId());
+        Assertions.assertEquals(1, result.getData().getGoods().size());
+        ShoppingCartGoods goods = result.getData().getGoods().get(0);
+
+        Assertions.assertEquals(4, goods.getId());
+        Assertions.assertEquals(200, goods.getNumber());
+        Assertions.assertEquals(StatusEnum.OK.toString().toLowerCase(), goods.getStatus());
     }
 
 

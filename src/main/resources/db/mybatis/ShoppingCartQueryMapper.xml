@@ -88,5 +88,14 @@
         </collection>
     </resultMap>
 
+    <delete id="deleteShoppingCart">
+        UPDATE SHOPPING_CART
+        SET STATUS   = 'deleted',
+            UPDATED_AT = now()
+        WHERE GOODS_ID = #{goodsId}
+        AND
+        USER_ID = #{userId}
+    </delete>
+
 
 </mapper>

@@ -31,7 +31,12 @@ public class ShoppingCartController {
 
     @PostMapping("/shoppingCart")
     public ShoppingCartData addToShoppingCart(@RequestBody AddToShoppingCartRequest request) {
-        return shoppingCartService.addToShoppingCart(request);
+        return shoppingCartService.addToShoppingCart(request, UserContext.getCurrentUser().getId());
+    }
+
+    @DeleteMapping("/shoppingCart/{goodsId}")
+    public ShoppingCartData deleteGoodsInShoppingCart(@PathVariable long goodsId) {
+        return shoppingCartService.deleteGoodsInShoppingCart(goodsId, UserContext.getCurrentUser().getId());
     }
 
 }

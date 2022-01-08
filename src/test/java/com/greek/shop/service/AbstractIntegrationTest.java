@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import javax.servlet.http.Cookie;
@@ -24,8 +25,7 @@ import java.io.UnsupportedEncodingException;
 
 import static com.greek.shop.service.PhoneNumberValidatorTest.VALID_PARAMETER;
 import static com.greek.shop.service.PhoneNumberValidatorTest.VALID_PARAMETER_CODE;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -82,20 +82,29 @@ public class AbstractIntegrationTest {
         if (cookie == null) {
             cookie = new Cookie("test", "test");
         }
-        return mockMvc.perform(get(url)
-                .cookie(cookie))
-                .andExpect(resultMatcher)
-                .andReturn();
+        return buildRequest(get(url).cookie(cookie), resultMatcher);
     }
 
     public MvcResult postRequest(String url, Cookie cookie, Object requestBody, ResultMatcher resultMatcher) throws Exception {
         if (cookie == null) {
             cookie = new Cookie("test", "test");
         }
-        return mockMvc.perform(post(url)
-                .cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(requestBody)))
+        return buildRequest(post(url)
+                        .cookie(cookie)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestBody)),
+                resultMatcher);
+    }
+
+    public MvcResult deleteRequest(String url, Cookie cookie, ResultMatcher resultMatcher) throws Exception {
+        if (cookie == null) {
+            cookie = new Cookie("test", "test");
+        }
+        return buildRequest(delete(url).cookie(cookie), resultMatcher);
+    }
+
+    private MvcResult buildRequest(RequestBuilder builder, ResultMatcher resultMatcher) throws Exception {
+        return mockMvc.perform(builder)
                 .andExpect(resultMatcher)
                 .andReturn();
     }
