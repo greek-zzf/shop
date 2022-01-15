@@ -8,3 +8,8 @@ spring:
 mybatis:
   mapper-locations:
     - classpath:db/mybatis/*.xml
+
+shop:
+  redis:
+    host: localhost
+    port: 6380

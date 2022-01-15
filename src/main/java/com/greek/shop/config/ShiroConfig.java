@@ -3,13 +3,17 @@ package com.greek.shop.config;
 import com.greek.shop.interceptor.ShiroLoginFilter;
 import com.greek.shop.interceptor.UserLoginInterceptor;
 import com.greek.shop.service.UserService;
+import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
+import org.crazycake.shiro.RedisCacheManager;
+import org.crazycake.shiro.RedisManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -27,8 +31,19 @@ import java.util.Map;
 @Configuration
 public class ShiroConfig implements WebMvcConfigurer {
 
+    @Value("{shop.redis.host}")
+    private String redisHost;
+    @Value("{shop.redis.port}")
+    private String redisPort;
+
+
+    private UserService userService;
+
     @Autowired
-    UserService userService;
+    public ShiroConfig(UserService userService) {
+        this.userService = userService;
+    }
+
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -62,6 +77,15 @@ public class ShiroConfig implements WebMvcConfigurer {
         securityManager.setCacheManager(new MemoryConstrainedCacheManager());
         securityManager.setSessionManager(new DefaultWebSessionManager());
         return securityManager;
+    }
+
+    @Bean
+    public CacheManager redisCacheManager() {
+        RedisCacheManager redisCacheManager = new RedisCacheManager();
+        RedisManager redisManager = new RedisManager();
+        redisManager.setHost(redisHost + ":" + redisPort);
+        redisCacheManager.setRedisManager(redisManager);
+        return redisCacheManager;
     }
 
 
