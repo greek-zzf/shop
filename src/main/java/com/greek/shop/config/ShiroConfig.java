@@ -4,7 +4,6 @@ import com.greek.shop.interceptor.ShiroLoginFilter;
 import com.greek.shop.interceptor.UserLoginInterceptor;
 import com.greek.shop.service.UserService;
 import org.apache.shiro.cache.CacheManager;
-import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -31,18 +30,13 @@ import java.util.Map;
 @Configuration
 public class ShiroConfig implements WebMvcConfigurer {
 
-    @Value("{shop.redis.host}")
+    @Value("${shop.redis.host}")
     private String redisHost;
-    @Value("{shop.redis.port}")
+    @Value("${shop.redis.port}")
     private String redisPort;
 
-
-    private UserService userService;
-
     @Autowired
-    public ShiroConfig(UserService userService) {
-        this.userService = userService;
-    }
+    private UserService userService;
 
 
     @Override
@@ -74,7 +68,7 @@ public class ShiroConfig implements WebMvcConfigurer {
     public SecurityManager securityManager(AuthorizingRealm realm) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(realm);
-        securityManager.setCacheManager(new MemoryConstrainedCacheManager());
+        securityManager.setCacheManager(redisCacheManager());
         securityManager.setSessionManager(new DefaultWebSessionManager());
         return securityManager;
     }
