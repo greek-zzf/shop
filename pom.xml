@@ -107,7 +107,7 @@
                 <configuration>
                     <user>root</user>
                     <password>123456</password>
-                    <url>jdbc:mysql://localhost/wxshop?useSSL=false&amp;allowPublicKeyRetrieval=true</url>
+                    <url>jdbc:mysql://192.168.20.111/wxshop?useSSL=false&amp;allowPublicKeyRetrieval=true</url>
                 </configuration>
             </plugin>
 

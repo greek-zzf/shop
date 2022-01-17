@@ -17,6 +17,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import javax.servlet.Filter;
 import java.util.HashMap;
@@ -30,9 +32,9 @@ import java.util.Map;
 @Configuration
 public class ShiroConfig implements WebMvcConfigurer {
 
-    @Value("${shop.redis.host}")
+    @Value("${spring.redis.host}")
     private String redisHost;
-    @Value("${shop.redis.port}")
+    @Value("${spring.redis.port}")
     private String redisPort;
 
     @Autowired
@@ -83,4 +85,9 @@ public class ShiroConfig implements WebMvcConfigurer {
     }
 
 
+    @Bean
+    public Jedis getJedis() {
+        JedisPool jedisPool = new JedisPool(redisHost, Integer.parseInt(redisPort));
+        return jedisPool.getResource();
+    }
 }
