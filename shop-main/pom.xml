@@ -3,27 +3,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.6</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>com.greek</groupId>
+        <artifactId>shop-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <groupId>com.greek</groupId>
-    <artifactId>shop-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <name>shop-parent</name>
-    <description>easy shop for practice</description>
-    <properties>
-        <java.version>1.8</java.version>
-        <checkstyle.path>${pom.basedir}/config/checkStyle.xml</checkstyle.path>
-    </properties>
 
-    <modules>
-        <module>shop-api</module>
-        <module>shop-main</module>
-        <module>shop-order</module>
-    </modules>
+    <groupId>com.greek</groupId>
+    <artifactId>shop-main</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>shop-main</name>
+    <description>main module</description>
 
     <dependencies>
         <dependency>
@@ -147,7 +136,7 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>3.1.2</version>
                 <configuration>
-                    <configLocation>${checkstyle.path}</configLocation>
+                    <configLocation>${basedir}/../config/checkStyle.xml</configLocation>
                     <includeTestSourceDirectory>false</includeTestSourceDirectory>
                     <enableRulesSummary>false</enableRulesSummary>
                     <excludes>com/greek/shop/dao/*,com/greek/shop/entity/*</excludes>
@@ -162,32 +151,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!--     SpotBugs 插件      -->
-            <!--            <plugin>-->
-            <!--                <groupId>com.github.spotbugs</groupId>-->
-            <!--                <artifactId>spotbugs-maven-plugin</artifactId>-->
-            <!--                <version>3.1.12</version>-->
-            <!--                <dependencies>-->
-            <!--                    <dependency>-->
-            <!--                        <groupId>com.github.spotbugs</groupId>-->
-            <!--                        <artifactId>spotbugs</artifactId>-->
-            <!--                        <version>4.4.2</version>-->
-            <!--                    </dependency>-->
-            <!--                </dependencies>-->
-            <!--                <configuration>-->
-            <!--                    <excludeFilterFile>${basedir}/config/spotBugFilter.xml</excludeFilterFile>-->
-            <!--                </configuration>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <id>spotbugs</id>-->
-            <!--                        <phase>verify</phase>-->
-            <!--                        <goals>-->
-            <!--                            <goal>check</goal>-->
-            <!--                        </goals>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--            </plugin>-->
 
             <plugin>
                 <groupId>org.jacoco</groupId>
