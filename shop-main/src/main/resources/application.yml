@@ -7,11 +7,22 @@ spring:
   redis:
     host: 192.168.20.111
     port: 6379
+  application:
+    name: shop-main
 
 mybatis:
   mapper-locations:
     - classpath:db/mybatis/*.xml
+
 server:
   port: 8081
 
+shop:
+  orderservice:
+    version: 0.0.1
+
+
+dubbo:
+  registry:
+    address: zookeeper://192.168.20.111:2181
 
