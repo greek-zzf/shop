@@ -19,6 +19,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
@@ -123,7 +124,7 @@
                 <configuration>
                     <user>root</user>
                     <password>123456</password>
-                    <url>jdbc:mysql://192.168.20.111/wxshop?useSSL=false&amp;allowPublicKeyRetrieval=true</url>
+                    <url>jdbc:mysql://127.0.0.1/wxshop?useSSL=false&amp;allowPublicKeyRetrieval=true</url>
                 </configuration>
             </plugin>
 
@@ -157,7 +158,7 @@
                     <configLocation>${basedir}/../config/checkStyle.xml</configLocation>
                     <includeTestSourceDirectory>false</includeTestSourceDirectory>
                     <enableRulesSummary>false</enableRulesSummary>
-                    <excludes>com/greek/shop/dao/*,com/greek/shop/entity/*</excludes>
+                    <excludes>com/greek/shop/generate/*</excludes>
                 </configuration>
                 <executions>
                     <execution>

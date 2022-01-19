@@ -2,7 +2,7 @@ package com.greek.shop.controller;
 
 import com.greek.shop.entity.Page;
 import com.greek.shop.entity.ShoppingCartData;
-import com.greek.shop.entity.vo.AddToShoppingCartRequest;
+import com.greek.shop.entity.AddToShoppingCartRequest;
 import com.greek.shop.service.ShoppingCartService;
 import com.greek.shop.service.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -13,16 +13,16 @@
                         password="123456">
         </jdbcConnection>
 
-        <javaModelGenerator targetPackage="com.greek.shop.entity" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.greek.shop.generate" targetProject="shop-main/src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
-        <sqlMapGenerator targetPackage="db.mybatis" targetProject="src/main/resources">
+        <sqlMapGenerator targetPackage="db.mybatis" targetProject="shop-main/src/main/resources">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.greek.shop.dao" targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.greek.shop.generate" targetProject="shop-main/src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
@@ -32,11 +32,6 @@
         </table>
 
         <table schema="wxshop" tableName="GOODS" domainObjectName="Goods">
-            <property name="useActualColumnNames" value="false"/>
-            <generatedKey column="ID" sqlStatement="MySql" identity="true"/>
-        </table>
-
-        <table schema="wxshop" tableName="ORDER" domainObjectName="Order">
             <property name="useActualColumnNames" value="false"/>
             <generatedKey column="ID" sqlStatement="MySql" identity="true"/>
         </table>

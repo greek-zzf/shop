@@ -2,9 +2,9 @@ package com.greek.shop.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.greek.shop.dao.UserMapper;
-import com.greek.shop.entity.User;
-import com.greek.shop.entity.UserExample;
+import com.greek.shop.generate.User;
+import com.greek.shop.generate.UserExample;
+import com.greek.shop.generate.UserMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;

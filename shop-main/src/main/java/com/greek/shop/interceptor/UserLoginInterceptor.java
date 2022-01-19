@@ -1,6 +1,6 @@
 package com.greek.shop.interceptor;
 
-import com.greek.shop.entity.User;
+import com.greek.shop.generate.User;
 import com.greek.shop.service.UserContext;
 import com.greek.shop.service.UserService;
 import org.apache.shiro.SecurityUtils;

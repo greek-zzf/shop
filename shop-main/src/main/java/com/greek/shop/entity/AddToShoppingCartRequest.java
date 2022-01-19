@@ -1,6 +1,4 @@
-package com.greek.shop.entity.vo;
-
-import com.greek.shop.entity.ShoppingCartGoods;
+package com.greek.shop.entity;
 
 import java.util.List;
 

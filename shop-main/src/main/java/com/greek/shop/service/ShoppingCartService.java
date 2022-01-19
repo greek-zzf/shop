@@ -1,12 +1,13 @@
 package com.greek.shop.service;
 
-import com.greek.shop.dao.GoodsMapper;
-import com.greek.shop.dao.ShoppingCartMapper;
 import com.greek.shop.dao.ShoppingCartQueryMapper;
-import com.greek.shop.entity.*;
-import com.greek.shop.entity.vo.AddToShoppingCartRequest;
+import com.greek.shop.entity.AddToShoppingCartRequest;
+import com.greek.shop.entity.Page;
+import com.greek.shop.entity.ShoppingCartData;
+import com.greek.shop.entity.ShoppingCartGoods;
 import com.greek.shop.enums.StatusEnum;
 import com.greek.shop.exception.HttpException;
+import com.greek.shop.generate.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

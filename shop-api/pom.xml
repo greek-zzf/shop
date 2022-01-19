@@ -14,6 +14,20 @@
     <name>shop-api</name>
     <description>api module</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.5.7</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
 
     <build>
         <plugins>
@@ -24,7 +38,7 @@
                 <configuration>
                     <user>root</user>
                     <password>123456</password>
-                    <url>jdbc:mysql://192.168.20.111/order?useSSL=false&amp;allowPublicKeyRetrieval=true</url>
+                    <url>jdbc:mysql://127.0.0.1/order?useSSL=false&amp;allowPublicKeyRetrieval=true</url>
                 </configuration>
             </plugin>
 

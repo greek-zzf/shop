@@ -1,13 +1,9 @@
 package com.greek.shop.service;
 
-import com.greek.shop.dao.GoodsMapper;
-import com.greek.shop.dao.ShopMapper;
-import com.greek.shop.entity.Goods;
-import com.greek.shop.entity.GoodsExample;
 import com.greek.shop.entity.Page;
-import com.greek.shop.entity.Shop;
 import com.greek.shop.enums.StatusEnum;
 import com.greek.shop.exception.HttpException;
+import com.greek.shop.generate.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

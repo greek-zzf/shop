@@ -1,5 +1,7 @@
 package com.greek.shop.entity;
 
+import com.greek.shop.generate.User;
+
 /**
  * @author Zhaofeng Zhou
  * @date 2021/11/10/010 11:02

@@ -1,6 +1,6 @@
 package com.greek.shop.service;
 
-import com.greek.shop.entity.User;
+import com.greek.shop.generate.User;
 
 /**
  * @author Zhaofeng Zhou

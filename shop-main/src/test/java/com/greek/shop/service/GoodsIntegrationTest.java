@@ -2,9 +2,9 @@ package com.greek.shop.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.greek.shop.ShopApplication;
-import com.greek.shop.entity.Goods;
 import com.greek.shop.entity.Result;
-import com.greek.shop.entity.Shop;
+import com.greek.shop.generate.Goods;
+import com.greek.shop.generate.Shop;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;

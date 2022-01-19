@@ -1,5 +1,7 @@
 package com.greek.shop.entity;
 
+import com.greek.shop.generate.Shop;
+
 import java.util.List;
 
 /**

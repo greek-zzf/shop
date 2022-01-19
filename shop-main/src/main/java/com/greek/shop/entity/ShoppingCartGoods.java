@@ -1,5 +1,7 @@
 package com.greek.shop.entity;
 
+import com.greek.shop.generate.Goods;
+
 /**
  * @author Zhaofeng Zhou
  * @date 2022/1/4 16:47
