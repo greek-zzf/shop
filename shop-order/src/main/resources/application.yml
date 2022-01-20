@@ -2,6 +2,12 @@
 spring:
   application:
     name: shop-order
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+    url: jdbc:mysql://192.168.20.111/order?useSSL=false&allowPublicKeyRetrieval=true
+
 
   # Dubbo Application
   ## The default value of dubbo.application.name is ${spring.application.name}
@@ -16,6 +22,10 @@ dubbo:
   registry:  ## Dubbo Registry
     address: zookeeper://192.168.20.111:2181
 
+
+mybatis:
+  mapper-locations:
+    - classpath:db/mybatis/*.xml
 
 shop:
   orderservice:

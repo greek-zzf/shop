@@ -3,13 +3,13 @@ package com.greek.shop.entity;
 import java.util.List;
 
 public class AddToShoppingCartRequest {
-    List<ShoppingCartGoods> goods;
+    List<GoodsWithNumber> goods;
 
-    public List<ShoppingCartGoods> getGoods() {
+    public List<GoodsWithNumber> getGoods() {
         return goods;
     }
 
-    public void setGoods(List<ShoppingCartGoods> goods) {
+    public void setGoods(List<GoodsWithNumber> goods) {
         this.goods = goods;
     }
 }

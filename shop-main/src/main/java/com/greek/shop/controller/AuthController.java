@@ -1,11 +1,9 @@
 package com.greek.shop.controller;
 
-import com.greek.shop.api.rpc.OrderService;
 import com.greek.shop.entity.LoginResponse;
 import com.greek.shop.service.AuthService;
 import com.greek.shop.service.UserContext;
 import com.greek.shop.validator.annotaion.Phone;
-import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +22,6 @@ import java.util.Optional;
 @Validated
 @RequestMapping("/api/v1")
 public class AuthController {
-
-    @DubboReference(version = "${shop.orderservice.version}")
-    OrderService orderService;
 
     private final AuthService authService;
 
@@ -51,7 +46,6 @@ public class AuthController {
 
     @GetMapping("/status")
     public LoginResponse loginStatus() {
-        System.out.println(orderService.sayHello("wszzh"));
         return Optional.ofNullable(UserContext.getCurrentUser())
                 .map(LoginResponse::login)
                 .orElse(LoginResponse.notLogin());

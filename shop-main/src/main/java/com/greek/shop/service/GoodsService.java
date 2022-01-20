@@ -1,7 +1,7 @@
 package com.greek.shop.service;
 
+import com.greek.shop.api.enums.StatusEnum;
 import com.greek.shop.entity.Page;
-import com.greek.shop.enums.StatusEnum;
 import com.greek.shop.exception.HttpException;
 import com.greek.shop.generate.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.toMap;
 
 /**
  * @author Zhaofeng Zhou
@@ -95,5 +99,12 @@ public class GoodsService {
                     .andShopIdEqualTo(shopId);
         }
         return (int) goodsMapper.countByExample(example);
+    }
+
+    public Map<Long, Goods> getIdToGoodsMap(List<Long> goodsId) {
+        GoodsExample example = new GoodsExample();
+        example.createCriteria().andIdIn(goodsId);
+        List<Goods> goods = goodsMapper.selectByExample(example);
+        return goods.stream().collect(toMap(Goods::getId, Function.identity()));
     }
 }

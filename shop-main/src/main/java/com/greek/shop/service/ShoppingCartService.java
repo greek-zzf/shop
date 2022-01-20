@@ -1,21 +1,21 @@
 package com.greek.shop.service;
 
+import com.greek.shop.api.enums.StatusEnum;
 import com.greek.shop.dao.ShoppingCartQueryMapper;
 import com.greek.shop.entity.AddToShoppingCartRequest;
+import com.greek.shop.entity.GoodsWithNumber;
 import com.greek.shop.entity.Page;
 import com.greek.shop.entity.ShoppingCartData;
-import com.greek.shop.entity.ShoppingCartGoods;
-import com.greek.shop.enums.StatusEnum;
 import com.greek.shop.exception.HttpException;
 import com.greek.shop.generate.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author Zhaofeng Zhou
@@ -26,14 +26,17 @@ public class ShoppingCartService {
     private ShoppingCartMapper shoppingCartMapper;
     private ShoppingCartQueryMapper shoppingCartQueryMapper;
     private GoodsMapper goodsMapper;
+    private GoodsService goodsService;
 
     @Autowired
     ShoppingCartService(ShoppingCartMapper shoppingCartMapper,
                         ShoppingCartQueryMapper shoppingCartQueryMapper,
-                        GoodsMapper goodsMapper) {
+                        GoodsMapper goodsMapper,
+                        GoodsService goodsService) {
         this.shoppingCartMapper = shoppingCartMapper;
         this.shoppingCartQueryMapper = shoppingCartQueryMapper;
         this.goodsMapper = goodsMapper;
+        this.goodsService = goodsService;
     }
 
     public Page<ShoppingCartData> getShoppingCartOfUser(long userId, int pageNum, int pageSize) {
@@ -54,7 +57,7 @@ public class ShoppingCartService {
     private ShoppingCartData merge(List<ShoppingCartData> sameOfShop) {
         ShoppingCartData result = new ShoppingCartData();
         result.setShop(sameOfShop.get(0).getShop());
-        List<ShoppingCartGoods> goods = sameOfShop.stream()
+        List<GoodsWithNumber> goods = sameOfShop.stream()
                 .map(ShoppingCartData::getGoods)
                 .flatMap(List::stream)
                 .collect(toList());
@@ -65,7 +68,7 @@ public class ShoppingCartService {
     public ShoppingCartData addToShoppingCart(AddToShoppingCartRequest request, long userId) {
         List<Long> goodsId = request.getGoods()
                 .stream()
-                .map(ShoppingCartGoods::getId)
+                .map(GoodsWithNumber::getId)
                 .filter(Objects::nonNull)
                 .collect(toList());
 
@@ -73,15 +76,12 @@ public class ShoppingCartService {
             throw HttpException.badRequest("商品id为空!");
         }
 
-        GoodsExample example = new GoodsExample();
-        example.createCriteria().andIdIn(goodsId);
-        List<Goods> goods = goodsMapper.selectByExample(example);
+        Map<Long, Goods> idToGoodsMap = goodsService.getIdToGoodsMap(goodsId);
 
-        if (goods.stream().map(Goods::getShopId).collect(Collectors.toSet()).size() != 1) {
+        if (idToGoodsMap.values().stream().map(Goods::getShopId).collect(Collectors.toSet()).size() != 1) {
             throw HttpException.badRequest("商品id非法!");
         }
 
-        Map<Long, Goods> idToGoodsMap = goods.stream().collect(toMap(Goods::getId, Function.identity()));
 
         List<ShoppingCart> shoppingCartRows = request.getGoods()
                 .stream()
@@ -89,7 +89,7 @@ public class ShoppingCartService {
                 .collect(toList());
 
         shoppingCartRows.forEach(shoppingCartMapper::insert);
-        return getLatestShoppingCartDataByUserIdShopId(goods.get(0).getShopId(), userId);
+        return getLatestShoppingCartDataByUserIdShopId(new ArrayList<>(idToGoodsMap.values()).get(0).getShopId(), userId);
     }
 
     private ShoppingCartData getLatestShoppingCartDataByUserIdShopId(long shopId, long userId) {
@@ -98,7 +98,7 @@ public class ShoppingCartService {
     }
 
 
-    private ShoppingCart toShoppingCart(ShoppingCartGoods item, Map<Long, Goods> idToGoodsMap) {
+    private ShoppingCart toShoppingCart(GoodsWithNumber item, Map<Long, Goods> idToGoodsMap) {
         Goods goods = idToGoodsMap.get(item.getId());
         if (goods == null) {
             return null;

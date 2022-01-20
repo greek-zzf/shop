@@ -73,7 +73,7 @@
             <result property="createdAt" column="SHOP_CREATED_AT"/>
             <result property="updatedAt" column="SHOP_UPDATED_AT"/>
         </association>
-        <collection property="goods" ofType="com.greek.shop.entity.ShoppingCartGoods">
+        <collection property="goods" ofType="com.greek.shop.entity.GoodsWithNumber">
             <id property="id" column="GOODS_ID"/>
             <result property="name" column="GOODS_NAME"/>
             <result property="description" column="GOODS_DESCRIPTION"/>

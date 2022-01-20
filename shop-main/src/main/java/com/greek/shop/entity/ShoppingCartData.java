@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class ShoppingCartData {
     Shop shop;
-    List<ShoppingCartGoods> goods;
+    List<GoodsWithNumber> goods;
 
     public Shop getShop() {
         return shop;
@@ -20,11 +20,11 @@ public class ShoppingCartData {
         this.shop = shop;
     }
 
-    public List<ShoppingCartGoods> getGoods() {
+    public List<GoodsWithNumber> getGoods() {
         return goods;
     }
 
-    public void setGoods(List<ShoppingCartGoods> goods) {
+    public void setGoods(List<GoodsWithNumber> goods) {
         this.goods = goods;
     }
 }

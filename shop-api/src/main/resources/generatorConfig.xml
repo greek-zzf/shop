@@ -9,10 +9,14 @@
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
         <plugin type="com.qiukeke.mybatis.plugins.MySQLLimitPlugin"/>
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://127.0.0.1/order?useSSL=FALSE&amp;allowPublicKeyRetrieval=TRUE"
+                        connectionURL="jdbc:mysql://192.168.20.111/order?useSSL=FALSE&amp;allowPublicKeyRetrieval=TRUE"
                         userId="root"
                         password="123456">
         </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="true"/>
+        </javaTypeResolver>
 
         <javaModelGenerator targetPackage="com.greek.shop.api.generate" targetProject="shop-api/src/main/java">
             <property name="enableSubPackages" value="true"/>
@@ -23,7 +27,8 @@
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.greek.shop.api.generate" targetProject="shop-api/src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.greek.shop.api.generate"
+                             targetProject="shop-api/src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 

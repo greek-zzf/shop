@@ -1,4 +1,4 @@
-package com.greek.shop.enums;
+package com.greek.shop.api.enums;
 
 /**
  * 状态枚举
@@ -7,8 +7,16 @@ package com.greek.shop.enums;
  * @date 2021/11/15/015 16:17
  */
 public enum StatusEnum {
-    DELETE,
-    OK;
+    DELETE(),
+    OK(),
+
+    // Only for order
+    PENDING(),
+    PAID(),
+    DELIVERED(),
+    RECEIVED();
+
+
 
     public String getName() {
         return name().toLowerCase();
