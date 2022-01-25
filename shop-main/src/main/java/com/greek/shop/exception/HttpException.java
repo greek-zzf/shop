@@ -1,11 +1,13 @@
 package com.greek.shop.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Zhaofeng Zhou
  * @date 16/11/2021 下午9:52
  */
+@Transactional
 public class HttpException extends RuntimeException {
     private int statusCode;
 
@@ -24,6 +26,10 @@ public class HttpException extends RuntimeException {
 
     public static HttpException badRequest(String message) {
         return new HttpException(message, HttpStatus.BAD_REQUEST.value());
+    }
+
+    public static HttpException gone(String message) {
+        return new HttpException(message, HttpStatus.GONE.value());
     }
 
     public int getStatusCode() {
