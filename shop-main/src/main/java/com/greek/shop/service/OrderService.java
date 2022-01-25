@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -73,8 +72,8 @@ public class OrderService {
     }
 
 
-    private BigDecimal calculateTotalPrice(OrderInfo orderInfo, Map<Long, Goods> idToGoodsMap) {
-        BigDecimal result = BigDecimal.ZERO;
+    private long calculateTotalPrice(OrderInfo orderInfo, Map<Long, Goods> idToGoodsMap) {
+        long result = 0;
 
         for (GoodsInfo goodsInfo : orderInfo.getGoods()) {
             Goods goods = idToGoodsMap.get(goodsInfo.getId());
@@ -86,7 +85,7 @@ public class OrderService {
                 throw HttpException.badRequest("number非法: " + goodsInfo.getNumber());
             }
 
-            result = result.add(goods.getPrice().multiply(new BigDecimal(goodsInfo.getNumber())));
+            result = result + goods.getPrice() * goodsInfo.getNumber();
         }
 
         return result;

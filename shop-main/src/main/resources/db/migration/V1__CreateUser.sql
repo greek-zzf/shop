@@ -10,6 +10,6 @@ create table USER
 
 );
 INSERT INTO USER (NAME, TEL, AVATAR_URL, ADDRESS)
-VALUES ('kongmu', '13134070272', 'http://url', '火星');
+VALUES ('k ongmu', '13134070272', 'http://url', '火星');
 INSERT INTO USER (NAME, TEL, AVATAR_URL, ADDRESS)
 VALUES ('kongmu4', '13426777854', 'http://url', '火星');
