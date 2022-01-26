@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 
 import javax.servlet.http.Cookie;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import static com.greek.shop.service.PhoneNumberValidatorTest.VALID_PARAMETER;
 import static com.greek.shop.service.PhoneNumberValidatorTest.VALID_PARAMETER_CODE;
@@ -51,7 +52,7 @@ public class AbstractIntegrationTest {
     Environment environment;
 
     @BeforeEach
-    void setUp() {
+    void initDatabase() {
         // 每次运行测试的时候，都需要将给测试数据库灌数据
         ClassicConfiguration conf = new ClassicConfiguration();
         conf.setDataSource(databaseUrl, username, password);
@@ -110,7 +111,7 @@ public class AbstractIntegrationTest {
     }
 
     public <T> T asJsonObject(MvcResult result, TypeReference<T> typeReference) throws UnsupportedEncodingException, JsonProcessingException {
-        return objectMapper.readValue(result.getResponse().getContentAsString(), typeReference);
+        return objectMapper.readValue(result.getResponse().getContentAsString(StandardCharsets.UTF_8), typeReference);
     }
 
     public static class CookieAndUser {

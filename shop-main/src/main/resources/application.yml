@@ -20,7 +20,7 @@ server:
 shop:
   orderservice:
     version: 0.0.1
-
+    url: ""
 
 dubbo:
   registry:

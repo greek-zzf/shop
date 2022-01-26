@@ -24,12 +24,12 @@
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
-        <sqlMapGenerator targetPackage="db.mybatis" targetProject="shop-api/src/main/resources">
+        <sqlMapGenerator targetPackage="db.mybatis" targetProject="shop-order/src/main/resources">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.greek.shop.api.generate"
-                             targetProject="shop-api/src/main/java">
+                             targetProject="shop-order/src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.greek.shop.api.enums.StatusEnum.PENDING;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -34,7 +35,7 @@ public class OrderService {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
 
-    @DubboReference(version = "${shop.orderservice.version}")
+    @DubboReference(version = "${shop.orderservice.version}", url = "${shop.orderservice.url}")
     OrderRpcService orderRpcService;
 
     private UserMapper userMapper;
@@ -127,6 +128,7 @@ public class OrderService {
         order.setUserId(userId);
         order.setAddress(userMapper.selectByPrimaryKey(userId).getAddress());
         order.setTotalPrice(calculateTotalPrice(orderInfo, idToGoodsMap));
+        order.setStatus(PENDING.getName());
 
         return orderRpcService.createOrder(orderInfo, order);
     }

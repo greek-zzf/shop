@@ -2,7 +2,6 @@ package com.greek.order.service;
 
 import com.greek.order.mapper.OrderBatchMapper;
 import com.greek.shop.api.data.OrderInfo;
-import com.greek.shop.api.enums.StatusEnum;
 import com.greek.shop.api.generate.Order;
 import com.greek.shop.api.generate.OrderMapper;
 import com.greek.shop.api.rpc.OrderRpcService;
@@ -11,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 import java.util.function.BooleanSupplier;
+
+import static com.greek.shop.api.enums.StatusEnum.PENDING;
 
 /**
  * @author Zhaofeng Zhou
@@ -32,7 +33,7 @@ public class RpcOrderServiceImpl implements OrderRpcService {
     }
 
     private void insertOrder(Order order) {
-        order.setStatus(StatusEnum.PENDING.getName());
+        order.setStatus(PENDING.getName());
 
         verify(() -> order.getUserId() == null, "userId不能为空！！");
         verify(() -> order.getTotalPrice() == null && order.getTotalPrice().doubleValue() < 0, "totalPrice 非法");

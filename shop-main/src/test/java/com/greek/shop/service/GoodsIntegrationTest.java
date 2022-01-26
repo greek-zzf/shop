@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,7 +47,7 @@ public class GoodsIntegrationTest extends AbstractIntegrationTest {
         goods.setDescription("纯天然无污染肥皂");
         goods.setDetails("这是一块好肥皂");
         goods.setImgUrl("https://img.url");
-        goods.setPrice(BigDecimal.valueOf(500L));
+        goods.setPrice(500L);
         goods.setStock(10);
         goods.setShopId(shopResult.getData().getId());
 
