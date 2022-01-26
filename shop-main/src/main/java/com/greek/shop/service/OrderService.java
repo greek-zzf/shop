@@ -17,6 +17,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ import static java.util.stream.Collectors.toList;
  * @author Zhaofeng Zhou
  * @date 2022/1/20 16:29
  */
+@Service
 public class OrderService {
 
     private static final Logger logger = LoggerFactory.getLogger(OrderService.class);

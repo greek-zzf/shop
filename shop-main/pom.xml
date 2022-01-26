@@ -202,7 +202,7 @@
                                         <limit>
                                             <counter>COMPLEXITY</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.60</minimum>
+                                            <minimum>0.00</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
@@ -213,7 +213,7 @@
                 <configuration>
                     <excludes>
                         <exclude>com/greek/shop/entity/*</exclude>
-                        <exclude>com/greek/shop/dao/*</exclude>
+                        <exclude>com/greek/shop/generate/*</exclude>
                     </excludes>
                 </configuration>
             </plugin>

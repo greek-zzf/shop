@@ -8,6 +8,7 @@
     <context id="order" targetRuntime="MyBatis3">
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
         <plugin type="com.qiukeke.mybatis.plugins.MySQLLimitPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.MapperAnnotationPlugin"/>
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
                         connectionURL="jdbc:mysql://192.168.20.111/order?useSSL=FALSE&amp;allowPublicKeyRetrieval=TRUE"
                         userId="root"
