@@ -23,6 +23,7 @@ public class OrderController {
 
     @PostMapping("/order")
     public OrderResponse createOrder(@RequestBody OrderInfo orderInfo) {
+        orderService.deductStock(orderInfo);
         return orderService.createOrder(orderInfo, UserContext.getCurrentUser().getId());
     }
 

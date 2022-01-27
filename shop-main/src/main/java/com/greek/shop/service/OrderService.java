@@ -12,12 +12,11 @@ import com.greek.shop.generate.Goods;
 import com.greek.shop.generate.ShopMapper;
 import com.greek.shop.generate.UserMapper;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,27 +40,20 @@ public class OrderService {
     private UserMapper userMapper;
     private GoodsService goodsService;
     private ShopMapper shopMapper;
-    private SqlSessionFactory sqlSessionFactory;
     private GoodsStockMapper goodsStockMapper;
 
     @Autowired
     public OrderService(UserMapper userMapper,
                         GoodsStockMapper goodsStockMapper,
                         GoodsService goodsService,
-                        ShopMapper shopMapper,
-                        SqlSessionFactory sqlSessionFactory) {
+                        ShopMapper shopMapper) {
         this.userMapper = userMapper;
         this.goodsStockMapper = goodsStockMapper;
         this.goodsService = goodsService;
         this.shopMapper = shopMapper;
-        this.sqlSessionFactory = sqlSessionFactory;
     }
 
     public OrderResponse createOrder(OrderInfo orderInfo, long userId) {
-
-        if (!deductStock(orderInfo)) {
-            throw HttpException.gone("扣减库存失败");
-        }
 
         Map<Long, Goods> idToGoodsMap = getIdToGoodsMap(orderInfo);
         Order createdOrder = createOrderViaRpc(orderInfo, userId, idToGoodsMap);
@@ -98,19 +90,14 @@ public class OrderService {
      * 扣减库存
      *
      * @param orderInfo
-     * @return 扣减成功返回 true, 否则返回 false
      */
-    private boolean deductStock(OrderInfo orderInfo) {
-        try (SqlSession sqlSession = sqlSessionFactory.openSession(false)) {
-            for (GoodsInfo goodsInfo : orderInfo.getGoods()) {
-                if (goodsStockMapper.deductStock(goodsInfo) <= 0) {
-                    logger.error("扣减库存失败, 商品id: {}, 数量: {}", goodsInfo.getId(), goodsInfo.getNumber());
-                    sqlSession.rollback();
-                    return false;
-                }
+    @Transactional
+    public void deductStock(OrderInfo orderInfo) {
+        for (GoodsInfo goodsInfo : orderInfo.getGoods()) {
+            if (goodsStockMapper.deductStock(goodsInfo) <= 0) {
+                logger.error("扣减库存失败, 商品id: {}, 数量: {}", goodsInfo.getId(), goodsInfo.getNumber());
+                throw HttpException.gone("扣减库存失败");
             }
-            sqlSession.commit();
-            return true;
         }
     }
 

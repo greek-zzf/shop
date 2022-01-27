@@ -80,4 +80,22 @@ public class OrderIntegrationTest extends AbstractIntegrationTest {
         Assertions.assertEquals(Arrays.asList(3, 5),
                 response.getData().getGoods().stream().map(GoodsWithNumber::getNumber).collect(toList()));
     }
+
+    @Test
+    void canRollbackDeductStock() throws Exception {
+        CookieAndUser cookieAndUser = loginAndReturnCookie();
+
+        OrderInfo orderInfo = new OrderInfo();
+        GoodsInfo goodsInfo1 = new GoodsInfo();
+        GoodsInfo goodsInfo2 = new GoodsInfo();
+
+        goodsInfo1.setNumber(3);
+        goodsInfo1.setId(4);
+        goodsInfo2.setNumber(6);
+        goodsInfo2.setId(5);
+
+        orderInfo.setGoods(Arrays.asList(goodsInfo1, goodsInfo2));
+
+        postRequest("/api/v1/order", cookieAndUser.getCookie(), orderInfo, status().isGone());
+    }
 }
