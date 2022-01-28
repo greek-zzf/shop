@@ -4,13 +4,20 @@
 
     <insert id="insertOrders" parameterType="com.greek.shop.api.data.OrderInfo">
 
-        insert into ORDER_GOODS(GOODS_ID, NUMBER )
+        insert into ORDER_GOODS(GOODS_ID,ORDER_ID, NUMBER )
         values
         <foreach item="item" index="index" collection="goods" separator=",">
             ({#{item.id},#{item.number})
         </foreach>
 
     </insert>
+
+    <select id="getGoodsInfoOfOder" parameterType="long">
+        SELECT GOODS_ID as id,
+                NUMBER as number
+        FROM ORDER_GOODS
+        WHERE ORDER_ID = #{id}
+    </select>
 
 
 </mapper>

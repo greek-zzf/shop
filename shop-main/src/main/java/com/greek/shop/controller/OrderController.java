@@ -1,14 +1,15 @@
 package com.greek.shop.controller;
 
 import com.greek.shop.api.data.OrderInfo;
+import com.greek.shop.api.enums.StatusEnum;
+import com.greek.shop.api.excepitons.HttpException;
 import com.greek.shop.entity.OrderResponse;
+import com.greek.shop.api.data.Page;
 import com.greek.shop.service.OrderService;
 import com.greek.shop.service.UserContext;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Zhaofeng Zhou
@@ -25,6 +26,23 @@ public class OrderController {
     public OrderResponse createOrder(@RequestBody OrderInfo orderInfo) {
         orderService.deductStock(orderInfo);
         return orderService.createOrder(orderInfo, UserContext.getCurrentUser().getId());
+    }
+
+    @DeleteMapping("/order/{id}")
+    public OrderResponse deleteOrder(@PathVariable("id") long orderId) {
+        return orderService.deleteOrder(orderId, UserContext.getCurrentUser().getId());
+    }
+
+    @GetMapping("/order")
+    public Page<OrderResponse> getOrder(@RequestParam("pageNum") Integer pageNum,
+                                        @RequestParam("pageSize") Integer pageSize,
+                                        @RequestParam(value = "status", required = false) String status) {
+
+        if (StringUtils.isNotEmpty(status) && StatusEnum.fromStringValue(status) == null) {
+            throw HttpException.badRequest("非法status: " + status);
+        }
+
+        return orderService.getOrder(pageNum, pageSize, StatusEnum.fromStringValue(status));
     }
 
 }

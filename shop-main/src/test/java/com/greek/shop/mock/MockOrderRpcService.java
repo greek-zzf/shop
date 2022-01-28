@@ -1,6 +1,7 @@
 package com.greek.shop.mock;
 
 import com.greek.shop.api.data.OrderInfo;
+import com.greek.shop.api.data.RpcOrderGoods;
 import com.greek.shop.api.generate.Order;
 import com.greek.shop.api.rpc.OrderRpcService;
 import org.apache.dubbo.config.annotation.DubboService;
@@ -20,5 +21,10 @@ public class MockOrderRpcService implements OrderRpcService {
     @Override
     public Order createOrder(OrderInfo orderInfo, Order order) {
         return orderRpcService.createOrder(orderInfo, order);
+    }
+
+    @Override
+    public RpcOrderGoods deleteOrder(long orderId, long userId) {
+        return orderRpcService.deleteOrder(orderId, userId);
     }
 }

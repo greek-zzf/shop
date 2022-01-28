@@ -17,8 +17,15 @@ public enum StatusEnum {
     RECEIVED();
 
 
-
     public String getName() {
         return name().toLowerCase();
+    }
+
+    public static StatusEnum fromStringValue(String value) {
+        try {
+            return StatusEnum.valueOf(value.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 }

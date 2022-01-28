@@ -1,6 +1,6 @@
 package com.greek.shop.controller;
 
-import com.greek.shop.entity.Page;
+import com.greek.shop.api.data.Page;
 import com.greek.shop.generate.Shop;
 import com.greek.shop.service.ShopService;
 import com.greek.shop.service.UserContext;

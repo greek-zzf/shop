@@ -14,4 +14,6 @@ public interface OrderBatchMapper {
 
     void insertOrders(List<GoodsInfo> goods);
 
+    List<GoodsInfo> getGoodsInfoOfOrder(long orderId);
+
 }

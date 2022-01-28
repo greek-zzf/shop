@@ -1,4 +1,4 @@
-package com.greek.shop.entity;
+package com.greek.shop.api.data;
 
 import java.io.Serializable;
 import java.util.List;

@@ -2,12 +2,15 @@ package com.greek.shop.service;
 
 import com.greek.shop.api.data.GoodsInfo;
 import com.greek.shop.api.data.OrderInfo;
+import com.greek.shop.api.data.Page;
+import com.greek.shop.api.data.RpcOrderGoods;
+import com.greek.shop.api.enums.StatusEnum;
 import com.greek.shop.api.generate.Order;
 import com.greek.shop.api.rpc.OrderRpcService;
 import com.greek.shop.dao.GoodsStockMapper;
 import com.greek.shop.entity.GoodsWithNumber;
 import com.greek.shop.entity.OrderResponse;
-import com.greek.shop.exception.HttpException;
+import com.greek.shop.api.excepitons.HttpException;
 import com.greek.shop.generate.Goods;
 import com.greek.shop.generate.ShopMapper;
 import com.greek.shop.generate.UserMapper;
@@ -55,9 +58,9 @@ public class OrderService {
 
     public OrderResponse createOrder(OrderInfo orderInfo, long userId) {
 
-        Map<Long, Goods> idToGoodsMap = getIdToGoodsMap(orderInfo);
+        Map<Long, Goods> idToGoodsMap = getIdToGoodsMap(orderInfo.getGoods());
         Order createdOrder = createOrderViaRpc(orderInfo, userId, idToGoodsMap);
-        return generateResponse(createdOrder, idToGoodsMap, orderInfo);
+        return generateResponse(createdOrder, idToGoodsMap, orderInfo.getGoods());
     }
 
     private GoodsWithNumber toGoodsWithNumber(GoodsInfo goodsInfo, Map<Long, Goods> idToGoodsMap) {
@@ -91,7 +94,7 @@ public class OrderService {
      *
      * @param orderInfo
      */
-    @Transactional
+    @Transactional(rollbackFor = HttpException.class)
     public void deductStock(OrderInfo orderInfo) {
         for (GoodsInfo goodsInfo : orderInfo.getGoods()) {
             if (goodsStockMapper.deductStock(goodsInfo) <= 0) {
@@ -101,8 +104,8 @@ public class OrderService {
         }
     }
 
-    private Map<Long, Goods> getIdToGoodsMap(OrderInfo orderInfo) {
-        List<Long> goodsId = orderInfo.getGoods()
+    private Map<Long, Goods> getIdToGoodsMap(List<GoodsInfo> goodsInfos) {
+        List<Long> goodsId = goodsInfos
                 .stream()
                 .map(GoodsInfo::getId)
                 .collect(toList());
@@ -120,18 +123,32 @@ public class OrderService {
         return orderRpcService.createOrder(orderInfo, order);
     }
 
-    private OrderResponse generateResponse(Order createdOrder, Map<Long, Goods> idToGoodsMap, OrderInfo orderInfo) {
+    private OrderResponse generateResponse(Order createdOrder, Map<Long, Goods> idToGoodsMap, List<GoodsInfo> goodsInfos) {
 
         OrderResponse response = new OrderResponse(createdOrder);
 
         Long shopId = new ArrayList<>(idToGoodsMap.values()).get(0).getShopId();
         response.setShop(shopMapper.selectByPrimaryKey(shopId));
         response.setGoods(
-                orderInfo.getGoods()
+                goodsInfos
                         .stream()
                         .map(goodsInfo -> toGoodsWithNumber(goodsInfo, idToGoodsMap))
                         .collect(toList()));
 
         return response;
+    }
+
+    public OrderResponse deleteOrder(long orderId, long userId) {
+
+        RpcOrderGoods rpcOrderGoods = orderRpcService.deleteOrder(orderId, userId);
+        Map<Long, Goods> idToGoodsMap = getIdToGoodsMap(rpcOrderGoods.getGoods());
+
+        return generateResponse(rpcOrderGoods.getOrder(), idToGoodsMap, rpcOrderGoods.getGoods());
+
+
+    }
+
+    public Page<OrderResponse> getOrder(Integer pageNum, Integer pageSize, StatusEnum fromStringValue) {
+        return null;
     }
 }

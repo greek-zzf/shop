@@ -1,4 +1,4 @@
-package com.greek.shop.exception;
+package com.greek.shop.api.excepitons;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;

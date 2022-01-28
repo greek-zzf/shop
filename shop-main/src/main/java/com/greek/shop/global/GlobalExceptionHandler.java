@@ -1,7 +1,7 @@
 package com.greek.shop.global;
 
 import com.greek.shop.entity.Result;
-import com.greek.shop.exception.HttpException;
+import com.greek.shop.api.excepitons.HttpException;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;

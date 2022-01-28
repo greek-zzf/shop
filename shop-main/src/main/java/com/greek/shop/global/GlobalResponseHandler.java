@@ -1,7 +1,7 @@
 package com.greek.shop.global;
 
 import com.greek.shop.entity.LoginResponse;
-import com.greek.shop.entity.Page;
+import com.greek.shop.api.data.Page;
 import com.greek.shop.entity.Result;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

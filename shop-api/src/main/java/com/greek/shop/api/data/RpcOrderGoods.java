@@ -1,22 +1,25 @@
 package com.greek.shop.api.data;
 
+import com.greek.shop.api.generate.Order;
+
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author Zhaofeng Zhou
- * @date 2022/1/20 9:34
+ * @date 2022/1/28 14:41
  */
-public class OrderInfo implements Serializable {
-    private long orderId;
+public class RpcOrderGoods implements Serializable {
+
+    private Order order;
     private List<GoodsInfo> goods;
 
-    public long getOrderId() {
-        return orderId;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setOrderId(long orderId) {
-        this.orderId = orderId;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     public List<GoodsInfo> getGoods() {

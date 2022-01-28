@@ -1,8 +1,8 @@
 package com.greek.shop.service;
 
-import com.greek.shop.entity.Page;
+import com.greek.shop.api.data.Page;
 import com.greek.shop.api.enums.StatusEnum;
-import com.greek.shop.exception.HttpException;
+import com.greek.shop.api.excepitons.HttpException;
 import com.greek.shop.generate.Shop;
 import com.greek.shop.generate.ShopExample;
 import com.greek.shop.generate.ShopMapper;
