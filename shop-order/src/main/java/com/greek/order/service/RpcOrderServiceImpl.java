@@ -70,7 +70,7 @@ public class RpcOrderServiceImpl implements OrderRpcService {
     }
 
     @Override
-    public Page<RpcOrderGoods> getOrder(Integer pageNum, Integer pageSize, StatusEnum status) {
+    public Page<RpcOrderGoods> getOrder(long userId, Integer pageNum, Integer pageSize, StatusEnum status) {
         OrderExample countByStatus = new OrderExample();
         setStatus(countByStatus, status);
         int count = (int) orderMapper.countByExample(countByStatus);
@@ -105,7 +105,20 @@ public class RpcOrderServiceImpl implements OrderRpcService {
 
     @Override
     public Order getOrderById(long orderId) {
-        return null;
+        return orderMapper.selectByPrimaryKey(orderId);
+    }
+
+    @Override
+    public RpcOrderGoods updateOrder(Order order) {
+        order.setUpdatedAt(new Date());
+        orderMapper.updateByPrimaryKeySelective(order);
+
+        List<GoodsInfo> goodsInfo = orderBatchMapper.getGoodsInfoOfOrder(order.getId());
+
+        RpcOrderGoods result = new RpcOrderGoods();
+        result.setGoods(goodsInfo);
+        result.setOrder(orderMapper.selectByPrimaryKey(order.getId()));
+        return result;
     }
 
     private RpcOrderGoods toRpcOrderGoods(Order order, Map<Long, List<OrderGoods>> orderIdToGoodsMap) {

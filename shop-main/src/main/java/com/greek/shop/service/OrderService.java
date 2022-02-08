@@ -5,13 +5,14 @@ import com.greek.shop.api.data.OrderInfo;
 import com.greek.shop.api.data.Page;
 import com.greek.shop.api.data.RpcOrderGoods;
 import com.greek.shop.api.enums.StatusEnum;
+import com.greek.shop.api.excepitons.HttpException;
 import com.greek.shop.api.generate.Order;
 import com.greek.shop.api.rpc.OrderRpcService;
 import com.greek.shop.dao.GoodsStockMapper;
 import com.greek.shop.entity.GoodsWithNumber;
 import com.greek.shop.entity.OrderResponse;
-import com.greek.shop.api.excepitons.HttpException;
 import com.greek.shop.generate.Goods;
+import com.greek.shop.generate.Shop;
 import com.greek.shop.generate.ShopMapper;
 import com.greek.shop.generate.UserMapper;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -139,17 +140,11 @@ public class OrderService {
     }
 
     public OrderResponse deleteOrder(long orderId, long userId) {
-
-        RpcOrderGoods rpcOrderGoods = orderRpcService.deleteOrder(orderId, userId);
-        Map<Long, Goods> idToGoodsMap = getIdToGoodsMap(rpcOrderGoods.getGoods());
-
-        return generateResponse(rpcOrderGoods.getOrder(), idToGoodsMap, rpcOrderGoods.getGoods());
-
-
+        return toOrderResponse(orderRpcService.deleteOrder(orderId, userId));
     }
 
-    public Page<OrderResponse> getOrder(Integer pageNum, Integer pageSize, StatusEnum status) {
-        Page<RpcOrderGoods> rpcOrderGoods = orderRpcService.getOrder(pageNum, pageSize, status);
+    public Page<OrderResponse> getOrder(long userId, Integer pageNum, Integer pageSize, StatusEnum status) {
+        Page<RpcOrderGoods> rpcOrderGoods = orderRpcService.getOrder(userId, pageNum, pageSize, status);
 
         List<GoodsInfo> goodIds = rpcOrderGoods.getData()
                 .stream()
@@ -167,16 +162,46 @@ public class OrderService {
         return Page.of(rpcOrderGoods.getPageNum(), rpcOrderGoods.getPageSize(), rpcOrderGoods.getTotalPage(), orders);
     }
 
-    public OrderResponse updateExpressInfomation(Order order, Long id) {
+    public OrderResponse updateExpressInformation(Order order, long userId) {
         Order orderInDatabase = orderRpcService.getOrderById(order.getId());
         if (orderInDatabase == null) {
-            throw HttpException.notFound("订单未找到: " + id);
+            throw HttpException.notFound("订单未找到: " + order.getId());
         }
 
-        return null;
+        Shop shop = shopMapper.selectByPrimaryKey(orderInDatabase.getShopId());
+        if (shop == null) {
+            throw HttpException.notFound("店铺未找到: " + orderInDatabase.getShopId());
+        }
+
+        if (shop.getOwnerUserId() != userId) {
+            throw HttpException.forbidden("无权访问! ");
+        }
+
+        Order copy = new Order();
+        copy.setId(order.getId());
+        copy.setExpressId(order.getExpressId());
+        copy.setExpressCompany(order.getExpressCompany());
+        return toOrderResponse(orderRpcService.updateOrder(copy));
     }
 
-    public OrderResponse updateOrderStatus(Order order, Long id) {
-        return null;
+    public OrderResponse updateOrderStatus(Order order, long userId) {
+        Order orderInDatabase = orderRpcService.getOrderById(order.getId());
+        if (orderInDatabase == null) {
+            throw HttpException.notFound("订单未找到: " + order.getId());
+        }
+
+        if (orderInDatabase.getUserId() != userId) {
+            throw HttpException.forbidden("无权访问! ");
+        }
+
+        Order copy = new Order();
+        copy.setId(order.getId());
+        copy.setStatus(order.getStatus());
+        return toOrderResponse(orderRpcService.updateOrder(copy));
+    }
+
+    private OrderResponse toOrderResponse(RpcOrderGoods rpcOrderGoods) {
+        Map<Long, Goods> idToGoodsMap = getIdToGoodsMap(rpcOrderGoods.getGoods());
+        return generateResponse(rpcOrderGoods.getOrder(), idToGoodsMap, rpcOrderGoods.getGoods());
     }
 }

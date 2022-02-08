@@ -40,7 +40,7 @@ public interface OrderRpcService {
      * @param status   数据状态
      * @return 订单商品信息
      */
-    Page<RpcOrderGoods> getOrder(Integer pageNum, Integer pageSize, StatusEnum status);
+    Page<RpcOrderGoods> getOrder(long userId, Integer pageNum, Integer pageSize, StatusEnum status);
 
 
     /**
@@ -50,4 +50,12 @@ public interface OrderRpcService {
      * @return 订单信息
      */
     Order getOrderById(long orderId);
+
+    /**
+     * 修改订单信息
+     *
+     * @param order 需要修改的订单信息
+     * @return 修改好的订单信息
+     */
+    RpcOrderGoods updateOrder(Order order);
 }
