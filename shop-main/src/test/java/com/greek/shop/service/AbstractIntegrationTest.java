@@ -86,6 +86,19 @@ public class AbstractIntegrationTest {
         return buildRequest(get(url).cookie(cookie), resultMatcher);
     }
 
+
+    public MvcResult patchRequest(String url, Cookie cookie, Object requestBody, ResultMatcher resultMatcher) throws Exception {
+        if (cookie == null) {
+            cookie = new Cookie("test", "test");
+        }
+
+        return buildRequest(patch(url)
+                        .cookie(cookie)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestBody)),
+                resultMatcher);
+    }
+
     public MvcResult postRequest(String url, Cookie cookie, Object requestBody, ResultMatcher resultMatcher) throws Exception {
         if (cookie == null) {
             cookie = new Cookie("test", "test");

@@ -151,6 +151,79 @@ public class OrderIntegrationTest extends AbstractIntegrationTest {
         Assertions.assertEquals(5, deleteOrderResponse.getData().getGoods().get(0).getNumber());
     }
 
+    @Test
+    void return404IfNotFound() throws Exception {
+        CookieAndUser cookieAndUser = loginAndReturnCookie();
+
+        Order order = new Order();
+        order.setId(123456L);
+
+        MvcResult request = patchRequest("/api/v1/order", cookieAndUser.getCookie(), order, status().isNotFound());
+    }
+
+    @Test
+    void canUpdateOrderExpressInformation() throws Exception {
+        CookieAndUser cookieAndUser = loginAndReturnCookie();
+
+        Order requestBody = new Order();
+        requestBody.setId(123456L);
+        requestBody.setShopId(2L);
+        requestBody.setExpressCompany("顺丰");
+        requestBody.setExpressId("SF123456789");
+
+
+        Order orderInDB = new Order();
+        orderInDB.setId(123456L);
+        orderInDB.setShopId(2L);
+        // 获取订单信息
+        when(mockOrderRpcService.orderRpcService.getOrderById(123456L))
+                .thenReturn(orderInDB);
+        when(mockOrderRpcService.orderRpcService.updateOrder(any())).thenReturn(
+                mockRpcOrderGoods(123456L, 1L, 3L, 2L, 10, DELIVERED));
+
+        MvcResult request = patchRequest("/api/v1/order", cookieAndUser.getCookie(), requestBody, status().isOk());
+        Result<OrderResponse> orderResponse = asJsonObject(request, new TypeReference<Result<OrderResponse>>() {
+        });
+
+        Assertions.assertEquals(2L, orderResponse.getData().getShop().getId());
+        Assertions.assertEquals("shop2", orderResponse.getData().getShop().getName());
+        Assertions.assertEquals(DELIVERED.getName(), orderResponse.getData().getStatus());
+        Assertions.assertEquals(1, orderResponse.getData().getGoods().size());
+        Assertions.assertEquals(3, orderResponse.getData().getGoods().get(0).getId());
+        Assertions.assertEquals(10, orderResponse.getData().getGoods().get(0).getNumber());
+    }
+
+    @Test
+    void canUpdateOrderStatus() throws Exception {
+        CookieAndUser cookieAndUser = loginAndReturnCookie();
+
+        Order requestBody = new Order();
+        requestBody.setId(123456L);
+        requestBody.setStatus(RECEIVED.getName());
+
+
+        Order orderInDB = new Order();
+        orderInDB.setId(123456L);
+        orderInDB.setUserId(1L);
+        // 获取订单信息
+        when(mockOrderRpcService.orderRpcService.getOrderById(123456L))
+                .thenReturn(orderInDB);
+        when(mockOrderRpcService.orderRpcService.updateOrder(any())).thenReturn(
+                mockRpcOrderGoods(123456L, 1L, 3L, 2L, 10, RECEIVED));
+
+        MvcResult request = patchRequest("/api/v1/order", cookieAndUser.getCookie(), requestBody, status().isOk());
+        Result<OrderResponse> orderResponse = asJsonObject(request, new TypeReference<Result<OrderResponse>>() {
+        });
+
+        Assertions.assertEquals(2L, orderResponse.getData().getShop().getId());
+        Assertions.assertEquals("shop2", orderResponse.getData().getShop().getName());
+        Assertions.assertEquals(RECEIVED.getName(), orderResponse.getData().getStatus());
+        Assertions.assertEquals(1, orderResponse.getData().getGoods().size());
+        Assertions.assertEquals(3, orderResponse.getData().getGoods().get(0).getId());
+        Assertions.assertEquals(10, orderResponse.getData().getGoods().get(0).getNumber());
+    }
+
+
     private Page<RpcOrderGoods> mockResponse() {
         RpcOrderGoods order1 = mockRpcOrderGoods(100, 1, 3, 2, 5, DELIVERED);
         RpcOrderGoods order2 = mockRpcOrderGoods(101, 1, 4, 2, 3, RECEIVED);
