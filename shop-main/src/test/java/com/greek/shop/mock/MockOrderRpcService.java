@@ -31,7 +31,17 @@ public class MockOrderRpcService implements OrderRpcService {
     }
 
     @Override
-    public Page<RpcOrderGoods> getOrder(Integer pageNum, Integer pageSize, StatusEnum status) {
-        return orderRpcService.getOrder(pageNum, pageSize, status);
+    public Page<RpcOrderGoods> getOrder(long userId, Integer pageNum, Integer pageSize, StatusEnum status) {
+        return orderRpcService.getOrder(userId, pageNum, pageSize, status);
+    }
+
+    @Override
+    public Order getOrderById(long orderId) {
+        return orderRpcService.getOrderById(orderId);
+    }
+
+    @Override
+    public RpcOrderGoods updateOrder(Order order) {
+        return orderRpcService.updateOrder(order);
     }
 }

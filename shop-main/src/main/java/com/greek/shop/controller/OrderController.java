@@ -43,13 +43,13 @@ public class OrderController {
             throw HttpException.badRequest("非法status: " + status);
         }
 
-        return orderService.getOrder(pageNum, pageSize, StatusEnum.fromStringValue(status));
+        return orderService.getOrder(UserContext.getCurrentUser().getId(), pageNum, pageSize, StatusEnum.fromStringValue(status));
     }
 
     @PatchMapping("/order")
     public OrderResponse updateOrder(@RequestBody Order order) {
         if (order.getExpressCompany() != null) {
-            return orderService.updateExpressInfomation(order, UserContext.getCurrentUser().getId());
+            return orderService.updateExpressInformation(order, UserContext.getCurrentUser().getId());
         } else {
             return orderService.updateOrderStatus(order, UserContext.getCurrentUser().getId());
         }

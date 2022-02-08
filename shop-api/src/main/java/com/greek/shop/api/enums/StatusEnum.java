@@ -23,6 +23,9 @@ public enum StatusEnum {
 
     public static StatusEnum fromStringValue(String value) {
         try {
+            if (null == value) {
+                return null;
+            }
             return StatusEnum.valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
             return null;
