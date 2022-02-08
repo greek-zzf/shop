@@ -148,7 +148,35 @@ public class OrderService {
 
     }
 
-    public Page<OrderResponse> getOrder(Integer pageNum, Integer pageSize, StatusEnum fromStringValue) {
+    public Page<OrderResponse> getOrder(Integer pageNum, Integer pageSize, StatusEnum status) {
+        Page<RpcOrderGoods> rpcOrderGoods = orderRpcService.getOrder(pageNum, pageSize, status);
+
+        List<GoodsInfo> goodIds = rpcOrderGoods.getData()
+                .stream()
+                .map(RpcOrderGoods::getGoods)
+                .flatMap(List::stream)
+                .collect(toList());
+
+        Map<Long, Goods> idToGoodsMap = getIdToGoodsMap(goodIds);
+
+        List<OrderResponse> orders = rpcOrderGoods.getData()
+                .stream()
+                .map(order -> generateResponse(order.getOrder(), idToGoodsMap, order.getGoods()))
+                .collect(toList());
+
+        return Page.of(rpcOrderGoods.getPageNum(), rpcOrderGoods.getPageSize(), rpcOrderGoods.getTotalPage(), orders);
+    }
+
+    public OrderResponse updateExpressInfomation(Order order, Long id) {
+        Order orderInDatabase = orderRpcService.getOrderById(order.getId());
+        if (orderInDatabase == null) {
+            throw HttpException.notFound("订单未找到: " + id);
+        }
+
+        return null;
+    }
+
+    public OrderResponse updateOrderStatus(Order order, Long id) {
         return null;
     }
 }

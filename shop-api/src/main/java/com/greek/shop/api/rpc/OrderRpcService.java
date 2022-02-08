@@ -1,7 +1,9 @@
 package com.greek.shop.api.rpc;
 
 import com.greek.shop.api.data.OrderInfo;
+import com.greek.shop.api.data.Page;
 import com.greek.shop.api.data.RpcOrderGoods;
+import com.greek.shop.api.enums.StatusEnum;
 import com.greek.shop.api.generate.Order;
 
 /**
@@ -29,4 +31,23 @@ public interface OrderRpcService {
      * @return 删除的订单信息
      */
     RpcOrderGoods deleteOrder(long orderId, long userId);
+
+    /**
+     * 分页获取订单商品信息
+     *
+     * @param pageNum  页码
+     * @param pageSize 分页大小
+     * @param status   数据状态
+     * @return 订单商品信息
+     */
+    Page<RpcOrderGoods> getOrder(Integer pageNum, Integer pageSize, StatusEnum status);
+
+
+    /**
+     * 根据订单id获取订单信息
+     *
+     * @param orderId 订单id
+     * @return 订单信息
+     */
+    Order getOrderById(long orderId);
 }

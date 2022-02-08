@@ -1,10 +1,11 @@
 package com.greek.shop.controller;
 
 import com.greek.shop.api.data.OrderInfo;
+import com.greek.shop.api.data.Page;
 import com.greek.shop.api.enums.StatusEnum;
 import com.greek.shop.api.excepitons.HttpException;
+import com.greek.shop.api.generate.Order;
 import com.greek.shop.entity.OrderResponse;
-import com.greek.shop.api.data.Page;
 import com.greek.shop.service.OrderService;
 import com.greek.shop.service.UserContext;
 import org.apache.commons.lang3.StringUtils;
@@ -43,6 +44,15 @@ public class OrderController {
         }
 
         return orderService.getOrder(pageNum, pageSize, StatusEnum.fromStringValue(status));
+    }
+
+    @PatchMapping("/order")
+    public OrderResponse updateOrder(@RequestBody Order order) {
+        if (order.getExpressCompany() != null) {
+            return orderService.updateExpressInfomation(order, UserContext.getCurrentUser().getId());
+        } else {
+            return orderService.updateOrderStatus(order, UserContext.getCurrentUser().getId());
+        }
     }
 
 }
