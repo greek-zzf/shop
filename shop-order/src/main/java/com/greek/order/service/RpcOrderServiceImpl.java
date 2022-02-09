@@ -31,18 +31,22 @@ import static java.util.stream.Collectors.toList;
 @DubboService(version = "${shop.orderservice.version}")
 public class RpcOrderServiceImpl implements OrderRpcService {
 
-    @Autowired
     private OrderMapper orderMapper;
-    @Autowired
     private OrderBatchMapper orderBatchMapper;
-    @Autowired
     private OrderGoodsMapper orderGoodsMapper;
+
+    @Autowired
+    public RpcOrderServiceImpl(OrderMapper orderMapper, OrderBatchMapper orderBatchMapper, OrderGoodsMapper orderGoodsMapper) {
+        this.orderMapper = orderMapper;
+        this.orderBatchMapper = orderBatchMapper;
+        this.orderGoodsMapper = orderGoodsMapper;
+    }
 
     @Override
     public Order createOrder(OrderInfo orderInfo, Order order) {
         insertOrder(order);
         orderInfo.setOrderId(order.getId());
-        orderBatchMapper.insertOrders(orderInfo.getGoods());
+        orderBatchMapper.insertOrders(orderInfo);
         return order;
     }
 
@@ -87,7 +91,7 @@ public class RpcOrderServiceImpl implements OrderRpcService {
                 .collect(Collectors.toList());
 
         OrderGoodsExample selectByOrderIds = new OrderGoodsExample();
-        selectByOrderIds.createCriteria().andIdIn(orderIds);
+        selectByOrderIds.createCriteria().andOrderIdIn(orderIds);
         List<OrderGoods> orderGoods = orderGoodsMapper.selectByExample(selectByOrderIds);
 
         int totalPage = count % pageSize == 0 ? count / pageSize : count / pageSize + 1;
@@ -159,8 +163,7 @@ public class RpcOrderServiceImpl implements OrderRpcService {
         order.setCreatedAt(new Date());
         order.setUpdatedAt(new Date());
 
-        long id = orderMapper.insert(order);
-        order.setId(id);
+        orderMapper.insert(order);
     }
 
     private void verify(BooleanSupplier supplier, String message) {

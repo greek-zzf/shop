@@ -18,7 +18,7 @@ public enum StatusEnum {
 
 
     public String getName() {
-        return name().toLowerCase();
+        return name().toUpperCase();
     }
 
     public static StatusEnum fromStringValue(String value) {

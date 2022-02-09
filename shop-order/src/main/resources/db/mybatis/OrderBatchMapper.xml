@@ -7,12 +7,12 @@
         insert into ORDER_GOODS(GOODS_ID,ORDER_ID, NUMBER )
         values
         <foreach item="item" index="index" collection="goods" separator=",">
-            ({#{item.id},#{item.number})
+            (#{item.id},#{orderId},#{item.number})
         </foreach>
 
     </insert>
 
-    <select id="getGoodsInfoOfOder" parameterType="long">
+    <select id="getGoodsInfoOfOrder" parameterType="long" resultType="com.greek.shop.api.data.GoodsInfo">
         SELECT GOODS_ID as id,
                 NUMBER as number
         FROM ORDER_GOODS

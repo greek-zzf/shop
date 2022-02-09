@@ -34,7 +34,7 @@
         </javaClientGenerator>
 
 
-        <table schema="order" tableName="ORDER" domainObjectName="Order">
+        <table schema="order" tableName="ORDER_TABELE" domainObjectName="Order">
             <property name="useActualColumnNames" value="false"/>
             <generatedKey column="ID" sqlStatement="MySql" identity="true"/>
         </table>

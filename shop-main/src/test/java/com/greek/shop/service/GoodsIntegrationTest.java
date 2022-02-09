@@ -57,7 +57,7 @@ public class GoodsIntegrationTest extends AbstractIntegrationTest {
         });
         assertEquals(response.getData().getName(), "肥皂");
         assertEquals(response.getData().getShopId(), shopResult.getData().getId());
-        assertEquals("ok", response.getData().getStatus());
+        assertEquals("OK", response.getData().getStatus());
     }
 
     @Test

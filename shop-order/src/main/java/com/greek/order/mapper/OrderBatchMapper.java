@@ -1,6 +1,7 @@
 package com.greek.order.mapper;
 
 import com.greek.shop.api.data.GoodsInfo;
+import com.greek.shop.api.data.OrderInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 @Mapper
 public interface OrderBatchMapper {
 
-    void insertOrders(List<GoodsInfo> goods);
+    void insertOrders(OrderInfo orderInfo);
 
     List<GoodsInfo> getGoodsInfoOfOrder(long orderId);
 
